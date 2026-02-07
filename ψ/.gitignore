@@ -1,7 +1,10 @@
 # Untracked pillars
 active/
 memory/logs/
-learn/
+
+# Learn: ignore origin symlinks only (source lives in ghq)
+# Docs are committed, symlinks are not
+learn/**/origin
 
 # State files
 .awaken-state.json
