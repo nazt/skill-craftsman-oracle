@@ -96,11 +96,7 @@
 
 # วันนี้คุณจะสร้าง Skill ของตัวเอง
 
-Today you will **build your own Claude Code skill** from scratch.
-
-ไม่ต้องเขียนโค้ดก่อนก็ได้ เริ่มจาก Markdown ธรรมดา
-
-No code required to start -- just Markdown.
+ไม่ต้องเขียนโค้ดก่อนก็ได้ เริ่มจาก **Markdown** ธรรมดา
 
 ### สิ่งที่คุณจะได้จากวันนี้:
 - เข้าใจสถาปัตยกรรม Skill (Skill Architecture)
@@ -209,37 +205,36 @@ description: Log emotions, feelings, and mood.
 ---
 ```
 
-### `name` -- ชื่อ Skill
-- ใช้เป็น command: `/feel`, `/learn`, `/trace`
-- ต้อง unique, ห้ามซ้ำกับ skill อื่น
-
-### `description` -- คำอธิบาย (สำคัญมาก!)
-- Claude ใช้ description เพื่อ **ตัดสินว่าจะเรียก skill นี้เมื่อไหร่**
-- เป็น trigger signal ที่บอก AI ว่า "skill นี้เหมาะกับคำสั่งนี้"
+### `name` -- ชื่อ Skill (ต้อง unique)
+### `description` -- **trigger signal** ที่บอก AI ว่าจะเรียก skill เมื่อไหร่
 
 ---
 
 ## Description is the Trigger / Description คือตัวกระตุ้น
 
-### Bad Description:
+### Bad:
 ```yaml
 description: A skill for stuff.
 ```
 Claude ไม่รู้ว่าจะใช้ตอนไหน
 
-### Good Description:
+### Good:
 ```yaml
 description: Log emotions, feelings, and mood.
   Use when feeling tired, happy, frustrated,
   or any emotional state worth recording.
-  Tracks emotional patterns over time.
 ```
 Claude เข้าใจทันทีว่า: user พูดถึง feeling --> เรียก /feel
 
-### หลักการ:
-- ใส่ **action words** (Log, Search, Create, Track)
-- ใส่ **use cases** (when feeling..., when you need to...)
+---
+
+## Description: หลักการเขียน
+
+- ใส่ **action words** -- Log, Search, Create, Track
+- ใส่ **use cases** -- when feeling..., when you need to...
 - ใส่ **keywords** ที่ user น่าจะพิมพ์
+
+> Description ดีๆ สำคัญกว่า code เก่งๆ
 
 ---
 
@@ -279,40 +274,48 @@ Extract the emotion keyword and optional context.
 ARGUMENTS: $ARGUMENTS
 ```
 
-### วิธีทำงาน:
+`$ARGUMENTS` ถูกแทนที่ด้วยข้อความที่ user พิมพ์หลัง `/command`
+
+---
+
+## ARGUMENTS: วิธีทำงาน
+
+### ตัวอย่าง:
 1. User พิมพ์: `/feel tired after long meeting`
 2. Claude เห็น: `ARGUMENTS: tired after long meeting`
-3. Claude ทำตาม Step 1: แยก emotion = "tired", context = "after long meeting"
+3. Claude แยก emotion = "tired", context = "after long meeting"
 
 ### Tips:
-- `$ARGUMENTS` ถูกแทนที่ด้วยข้อความที่ user พิมพ์หลัง `/command`
-- ถ้า user ไม่ใส่ arguments, `$ARGUMENTS` จะว่างเปล่า
+- ถ้า user ไม่ใส่ arguments --> `$ARGUMENTS` จะว่างเปล่า
 - เขียน Step ให้ handle ทั้งกรณี **มี** และ **ไม่มี** arguments
 
 ---
 
 ## Local vs Global Install
 
-### Local Install (ใช้ใน project เดียว):
+### Local (ใช้ใน project เดียว):
 ```bash
 oracle-skills install -s feel -y
 ```
-- ติดตั้งไปที่ `.claude/skills/` ใน project ปัจจุบัน
-- เหมาะกับ skill เฉพาะ project
+ติดตั้งไปที่ `.claude/skills/` ใน project ปัจจุบัน
 
-### Global Install (ใช้ได้ทุก project):
+### Global (ใช้ได้ทุก project):
 ```bash
 oracle-skills install -s feel -g -y
 ```
-- ติดตั้งไปที่ `~/.claude/skills/`
-- ใช้ได้ทุก project, ทุก directory
+ติดตั้งไปที่ `~/.claude/skills/`
 
-### ความต่าง:
+---
+
+## Local vs Global: เปรียบเทียบ
+
 | | Local | Global |
 |---|---|---|
 | ที่อยู่ | `.claude/skills/` | `~/.claude/skills/` |
 | scope | project เดียว | ทุก project |
 | เหมาะกับ | project-specific | utility skills |
+
+> **Rule of thumb**: ถ้าใช้ทุก project --> Global, ถ้าเฉพาะ project --> Local
 
 ---
 
@@ -327,12 +330,7 @@ BB AI          Codex CLI
 
 Skill เดียว --> ติดตั้งได้กับ **14 agents** ผ่าน CLI installer
 
-แต่ละ agent มี folder structure ต่างกัน:
-- Claude Code: `.claude/commands/`
-- Cursor: `.cursor/rules/`
-- Windsurf: `.windsurfrules`
-
-**oracle-skills CLI จัดการให้อัตโนมัติ**
+**oracle-skills CLI จัดการ folder structure ของแต่ละ agent ให้อัตโนมัติ**
 
 ---
 
@@ -499,6 +497,10 @@ ls .claude/commands/
 Timestamp: 2026-02-14T10:00:00+07:00
 ```
 
+---
+
+## ทดสอบเพิ่มเติม + Troubleshooting
+
 ### ลองอีกที:
 ```
 /hello
@@ -588,14 +590,8 @@ ARGUMENTS: $ARGUMENTS
 
 # scripts/main.ts
 
-บาง Skill ต้องการ **data จริง** จาก system:
-- git log / git diff
-- file system
-- API calls
-- JSON processing
-
-SKILL.md บอก Claude **ว่าจะทำอะไร**
-scripts/main.ts บอก Claude **ว่าจะเอา data มาจากไหน**
+**SKILL.md** บอก Claude **ว่าจะทำอะไร**
+**scripts/main.ts** บอก Claude **ว่าจะเอา data มาจากไหน**
 
 ```
 skills/
@@ -621,9 +617,12 @@ import { $ } from "bun";
 const output = await $`git log --oneline`.text();
 ```
 
-### ข้อดีของ Bun Shell:
+---
+
+## Bun Shell: ข้อดี
+
 - **Cleaner syntax** -- template literal, อ่านง่าย
-- **Auto-escape** -- ตัวแปรถูก escape อัตโนมัติ ปลอดภัยจาก injection
+- **Auto-escape** -- ปลอดภัยจาก injection
 - **Type-safe** -- TypeScript built-in
 - **Fast** -- Bun เร็วกว่า Node.js 3-5x
 - **Built-in** -- ไม่ต้อง import child_process
@@ -664,14 +663,7 @@ console.log(pkg.name);
 | `.exitCode` | `number` | ตรวจสอบว่าสำเร็จหรือไม่ (0 = OK) |
 | `.lines()` | `string[]` | ต้องการแยกเป็นบรรทัด |
 
-### Chaining:
-```typescript
-// quiet + text
-const out = await $`git diff --stat`.quiet().text();
-
-// quiet + json
-const data = await $`cat data.json`.quiet().json();
-```
+> chain ได้: `await $`cmd`.quiet().text()`
 
 ---
 
@@ -687,7 +679,10 @@ const count = 5;
 const results = await $`git log --grep=${query} -${count}`.text();
 ```
 
-### Safe by default:
+---
+
+## Bun Shell: Safe by Default
+
 ```typescript
 // ถ้า user ใส่ input อันตราย:
 const userInput = "; rm -rf /";
@@ -714,6 +709,10 @@ console.log(JSON.stringify({ commits: commits.split('\n') }));
 const status = await $`git status --short`.text();
 console.log(status);
 ```
+
+---
+
+## Output Pattern: Markdown
 
 ### 3. Markdown Output (สำหรับ reports):
 ```typescript
@@ -811,15 +810,15 @@ console.log(diffs || "_No changes found_");
 **เวลา: 25 นาที**
 
 ### Option A: เพิ่ม script ให้ skill จาก Exercise 1
-- เช่น `/bookmark` + script ที่ fetch URL title
-
 ### Option B: สร้าง /git-search ตาม demo
-- Copy SKILL.md + main.ts แล้ว modify
-
 ### Option C: สร้าง skill ใหม่ที่ต้องใช้ data
 - `/repo-stats` -- แสดงสถิติ git repo
 - `/recent-changes` -- แสดง changes ล่าสุด
 - `/branch-info` -- แสดงข้อมูล branches
+
+---
+
+## Exercise 2: Setup
 
 ### ต้องการ:
 ```bash
@@ -827,25 +826,22 @@ bun --version    # ตรวจว่ามี Bun
 bun init -y      # สร้าง project (ถ้ายังไม่มี)
 ```
 
+> Bun ติดตั้งด้วย `curl -fsSL https://bun.sh/install | bash`
+
 ---
 
 ## Part 4: The Parallel Pattern / รูปแบบ Parallel
 
-# ทำไม 1 agent = มุมมองแคบ, 3 agents = ครอบคลุม
-
-### ตัวอย่าง: `/learn` ศึกษา codebase
+# 1 agent = มุมมองแคบ, 3 agents = ครอบคลุม
 
 **1 agent**: อ่าน README แล้วสรุป (ผิวเผิน)
 
 **3 agents พร้อมกัน**:
-- Agent 1: สำรวจ architecture + folder structure
-- Agent 2: อ่าน core logic + key patterns
-- Agent 3: ศึกษา tests + edge cases
+- Agent 1: สำรวจ architecture
+- Agent 2: อ่าน core logic
+- Agent 3: ศึกษา tests
 
-**ผลลัพธ์**: ได้ภาพรวมที่ **ลึก** และ **หลากมุมมอง** กว่ามาก
-
-> เหมือนส่ง 3 คนไปสำรวจเมืองใหม่ แล้วกลับมาเล่าให้ฟัง
-> แต่ละคนเห็นคนละมุม -- รวมกันได้ภาพเต็ม
+> เหมือนส่ง 3 คนไปสำรวจเมืองใหม่ แต่ละคนเห็นคนละมุม -- รวมกันได้ภาพเต็ม
 
 ---
 
@@ -885,7 +881,13 @@ User: /learn some-repo
 /learn --deep    -->  5 agents  ~10 min  (เจาะลึก)
 ```
 
-### Implementation ใน SKILL.md:
+- **--fast**: แค่อยากรู้คร่าวๆ ว่า repo นี้เกี่ยวกับอะไร
+- **default**: อยากเข้าใจดีพอที่จะ contribute ได้
+- **--deep**: อยากเข้าใจทุกมุม ทุก pattern
+
+---
+
+## Mode Escalation: Implementation
 
 ```markdown
 ## Step 1: Determine Mode
@@ -897,24 +899,17 @@ Check ARGUMENTS for flags:
 Each subagent gets a different focus area.
 ```
 
-### ทำไมต้อง escalate?
-- **--fast**: แค่อยากรู้คร่าวๆ ว่า repo นี้เกี่ยวกับอะไร
-- **default**: อยากเข้าใจดีพอที่จะ contribute ได้
-- **--deep**: อยากเข้าใจทุกมุม ทุก pattern ทุก edge case
+> เขียนใน SKILL.md แค่นี้ Claude จัดการเรื่อง spawning ให้
 
 ---
 
 ## Haiku Economics / เศรษฐศาสตร์ Haiku
 
-### ราคา token (โดยประมาณ):
-
 | Model | Cost | เหมาะกับ |
 |-------|------|---------|
 | **Opus** | $$$$$ | Synthesis, final output |
 | **Sonnet** | $$$ | Complex reasoning |
-| **Haiku** | $ | Search, exploration, data gathering |
-
-### Parallel Skill ใช้ Haiku เป็น subagent:
+| **Haiku** | $ | Search, exploration |
 
 ```
 3 Haiku agents = ราคาเท่า 1 Opus call
@@ -923,9 +918,14 @@ Each subagent gets a different focus area.
 
 **ประหยัด ~85% เทียบกับใช้ Opus ทำทุกอย่าง**
 
-### Pattern: **Haiku สำรวจ, Opus สังเคราะห์**
-- Haiku อ่านไฟล์, ค้นหา, สรุปข้อมูล (ถูก + เร็ว)
-- Opus รวมผลลัพธ์ เขียน final report (แพง แต่ทำครั้งเดียว)
+---
+
+## Pattern: Haiku สำรวจ, Opus สังเคราะห์
+
+- **Haiku** อ่านไฟล์, ค้นหา, สรุปข้อมูล (ถูก + เร็ว)
+- **Opus** รวมผลลัพธ์ เขียน final report (แพง แต่ทำครั้งเดียว)
+
+> ใช้ทรัพยากรอย่างฉลาด -- ส่ง scout ไปสำรวจ แล้วให้ master สรุป
 
 ---
 
@@ -948,14 +948,14 @@ Each subagent gets a different focus area.
 
 ## Critical Pattern: Path Discipline
 
-# ส่ง Absolute Path เสมอ -- อย่าใช้ Relative Path!
+# ส่ง Absolute Path เสมอ!
 
 ### Problem:
 ```markdown
 ## Step: Subagent Task
 Explore the repo and write to docs/
 ```
-Subagent: "docs/ อยู่ที่ไหน? relative to อะไร?"
+Subagent: "docs/ อยู่ที่ไหน?"
 
 ### Solution:
 ```markdown
@@ -965,11 +965,6 @@ DOCS_DIR: /Users/nat/Code/github.com/nazt/my-repo/ψ/learn
 
 Explore SOURCE_DIR and write results to DOCS_DIR.
 ```
-
-### ทำไมสำคัญ?
-- Subagent ทำงานใน process แยก -- ไม่รู้ cwd ของ parent
-- Relative path จะพังเมื่อ subagent เริ่มจาก directory อื่น
-- **Absolute path = ปลอดภัยเสมอ**
 
 ---
 
@@ -990,19 +985,7 @@ learn_report.md    <-- Agent 2 เขียนทับ!
 1423_testing.md         <-- Agent 3 (14:23)
 ```
 
-### Pattern ใน SKILL.md:
-```markdown
-## Step 0: Timestamp
-Record the current time.
-Use format HHMM for file prefix.
-
-## Step 2: Write Output
-Filename: {HHMM}_{topic}.md
-Example: 1423_architecture.md
-```
-
-> ทำให้ทุก run สร้างไฟล์ใหม่ ไม่เขียนทับ run ก่อนหน้า
-> สอดคล้องกับหลัก **Nothing is Deleted**
+> สอดคล้องกับหลัก **Nothing is Deleted** -- ทุก run สร้างไฟล์ใหม่
 
 ---
 
@@ -1143,23 +1126,26 @@ Key Questions:
 
 # สร้างสิ่งที่อยากโชว์ให้คนอื่นดู
 
-### Resources:
-- Slide deck นี้ -- เปิดดูกลับได้ตลอด
-- Exercise templates -- ใช้เป็น starting point
-- oracle-skills-cli repo -- ดูตัวอย่าง 26 skills
-- ผู้สอน -- ยกมือถามได้เลย
-
 ### Tips:
 - เริ่มจาก **Simple** แล้วค่อยเพิ่ม
 - ทดสอบ **ทุกครั้ง** ที่เปลี่ยนอะไร
 - `description` ดีๆ สำคัญกว่า code เก่งๆ
 - ถ้าติด -- ดู `/feel` หรือ `/hello` เป็นตัวอย่าง
 
-### Checklist:
+> ยกมือถามผู้สอนได้เลย
+
+---
+
+## Build Checklist
+
 - [ ] SKILL.md มี frontmatter ครบ (name + description)
 - [ ] Steps ชัดเจน Claude ทำตามได้
 - [ ] ARGUMENTS: $ARGUMENTS อยู่ท้ายไฟล์
 - [ ] ทดสอบแล้ว work
+
+### Resources:
+- Slide deck นี้ -- เปิดดูกลับได้ตลอด
+- oracle-skills-cli repo -- ดูตัวอย่าง 26 skills
 
 ---
 
