@@ -81,7 +81,7 @@
                 <textarea data-template>
 # Claude Code
 
-**เครื่องมือ Agentic Coding ที่อ่าน, แก้, และรัน**
+**เขียนคำสั่ง Claude ก็เขียน code ให้**
 
 Nat (Weerawan) — Fortal AI Agent Learning
 
@@ -93,13 +93,13 @@ Nat (Weerawan) — Fortal AI Agent Learning
 
 ## Claude Code คืออะไร?
 
-Agentic coding tool ที่ทำงานได้ทุกที่
+AI เขียน code ให้ — ใช้ได้ทุกที่
 
-- **Terminal** — CLI เต็มรูปแบบ <!-- .element: class="fragment" -->
+- **Terminal** — full CLI
 - **VS Code / Cursor** — inline diffs, @-mentions <!-- .element: class="fragment" -->
 - **JetBrains** — IntelliJ, PyCharm, WebStorm <!-- .element: class="fragment" -->
-- **Desktop App** — standalone, หลาย session พร้อมกัน <!-- .element: class="fragment" -->
-- **Web / iOS** — ไม่ต้องติดตั้ง, ทำงานจากมือถือได้ <!-- .element: class="fragment" -->
+- **Desktop App** — เปิดหลายหน้าต่างพร้อมกัน <!-- .element: class="fragment" -->
+- **Web / iOS** — ไม่ต้องลง ใช้จากมือถือได้เลย <!-- .element: class="fragment" -->
 
 ---
 
@@ -126,17 +126,17 @@ cd your-project && claude
 
 ## ทำอะไรได้บ้าง?
 
-- **สร้าง feature** — บอกเป็นภาษาคน Claude เขียน code ให้ <!-- .element: class="fragment" -->
-- **แก้ bug** — paste error message, Claude หา root cause <!-- .element: class="fragment" -->
-- **Git workflow** — commit, branch, PR อัตโนมัติ <!-- .element: class="fragment" -->
-- **เชื่อมเครื่องมือ** — MCP เชื่อม Jira, Slack, DB <!-- .element: class="fragment" -->
-- **Pipe & Script** — ใช้ร่วมกับ CLI อื่นได้ <!-- .element: class="fragment" -->
+- **สร้าง feature** — พูดภาษาคน ได้ code
+- **แก้ bug** — ส่ง error มา Claude หาให้ <!-- .element: class="fragment" -->
+- **Git workflow** — commit, branch, PR ทำเองหมด <!-- .element: class="fragment" -->
+- **เชื่อมเครื่องมือ** — ต่อ Jira, Slack, DB ผ่าน MCP <!-- .element: class="fragment" -->
+- **Pipe & Script** — ใช้คู่กับ CLI อื่นได้ <!-- .element: class="fragment" -->
 
 ---
 
 ## CLAUDE.md — Memory
 
-ไฟล์ Markdown ที่ Claude อ่านทุกครั้งที่เริ่ม session
+Markdown ไฟล์เดียว — Claude จำทุก session
 
 ```
 project/
@@ -161,13 +161,13 @@ project/
 | **Local** | `./CLAUDE.local.md` | ตัวเอง |
 | **Auto** | `~/.claude/projects/*/memory/` | Claude จดเอง |
 
-**Auto Memory** — Claude จดบันทึกเอง ไม่ต้องสั่ง
+**Auto Memory** — Claude จดให้เอง ไม่ต้องบอก
 
 ---
 
 ## Skills — Custom Slash Commands
 
-### สร้าง `/command` ของตัวเอง
+### สร้าง `/command` เอง
 
 ```yaml
 ---
@@ -183,13 +183,13 @@ When explaining code:
 4. Highlight gotchas
 ```
 
-**ใช้งาน**: `/explain-code src/auth.ts`
+**เรียก**: `/explain-code src/auth.ts`
 
 ---
 
 ## Skills อยู่ที่ไหน?
 
-| Location | Path | ใครใช้ได้ |
+| Location | Path | ใครเห็น |
 |----------|------|-----------|
 | **Personal** | `~/.claude/skills/` | ตัวเอง ทุก project |
 | **Project** | `.claude/skills/` | ทีมเดียวกัน |
@@ -214,15 +214,15 @@ model: sonnet
 
 | Field | Effect |
 |-------|--------|
-| `disable-model-invocation` | Claude ไม่เรียกเอง |
-| `context: fork` | รันใน subagent แยก |
-| `allowed-tools` | จำกัด tools ที่ใช้ |
+| `disable-model-invocation` | Claude เรียกเองไม่ได้ |
+| `context: fork` | แยกไปรันใน subagent |
+| `allowed-tools` | ให้ใช้แค่ tools ที่กำหนด |
 
 ---
 
 ## Dynamic Context
 
-**`!`command``** — รัน shell ก่อนส่งให้ Claude
+**`!`command``** — ดึงข้อมูลจริงมาใส่ก่อน Claude เห็น
 
 ```yaml
 ---
@@ -239,13 +239,13 @@ agent: Explore
 Summarize this PR...
 ```
 
-ข้อมูลถูก inject ก่อน Claude เห็น
+ข้อมูลโผล่มาให้ Claude เห็นเลย
 
 ---
 
 ## Hooks — Automation
 
-Shell commands ที่รันอัตโนมัติตาม lifecycle
+คำสั่งที่รันเองตามจังหวะ
 
 ```json
 {
@@ -267,12 +267,12 @@ Shell commands ที่รันอัตโนมัติตาม lifecycle
 
 ## Hook Events
 
-| Event | เมื่อไหร่ | Block ได้? |
+| Event | เมื่อไหร่ | หยุดได้? |
 |-------|----------|-----------|
-| **SessionStart** | เริ่ม session | ไม่ |
+| **SessionStart** | เริ่ม session | - |
 | **UserPromptSubmit** | user พิมพ์ | ได้ |
 | **PreToolUse** | ก่อนใช้ tool | ได้ |
-| **PostToolUse** | หลังใช้ tool | ไม่ |
+| **PostToolUse** | หลังใช้ tool | - |
 | **Stop** | Claude หยุด | ได้ |
 | **SubagentStart/Stop** | subagent เริ่ม/จบ | บางส่วน |
 
@@ -280,7 +280,7 @@ Shell commands ที่รันอัตโนมัติตาม lifecycle
 
 ## Hook Types
 
-3 แบบ เลือกตามความต้องการ
+3 แบบ — เลือกให้เข้ากับงาน
 
 | Type | ทำอะไร | ตัวอย่าง |
 |------|--------|---------|
@@ -299,7 +299,7 @@ Shell commands ที่รันอัตโนมัติตาม lifecycle
 
 ## MCP — Model Context Protocol
 
-เชื่อม Claude กับเครื่องมือภายนอก
+ต่อ Claude เข้ากับเครื่องมือที่ใช้อยู่
 
 ```bash
 # เพิ่ม GitHub
@@ -320,12 +320,12 @@ claude mcp add --transport stdio db \
 
 ## MCP Scopes
 
-| Scope | เก็บที่ไหน | แชร์ |
+| Scope | เก็บที่ไหน | commit ได้? |
 |-------|-----------|------|
-| **Local** | `~/.claude.json` | ไม่ (default) |
-| **Project** | `.mcp.json` | commit ได้ |
-| **User** | `~/.claude.json` | ทุก project |
-| **Managed** | system dir | ทั้งองค์กร |
+| **Local** | `~/.claude.json` | - |
+| **Project** | `.mcp.json` | ได้ |
+| **User** | `~/.claude.json` | - |
+| **Managed** | system dir | admin จัดการ |
 
 ```bash
 # จัดการ
@@ -339,9 +339,9 @@ claude mcp remove github
 
 ## Sub-agents
 
-Agent แยกที่ทำงานเฉพาะทาง
+ส่งคนเก่งไปทำงาน
 
-| Agent | Model | เก่งเรื่อง |
+| Agent | Model | ถนัด |
 |-------|-------|-----------|
 | **Explore** | Haiku | ค้นหา, อ่าน code (read-only) |
 | **Plan** | inherit | วิเคราะห์ก่อนวางแผน |
@@ -370,22 +370,22 @@ Provide feedback by priority:
 - Suggestions (consider)
 ```
 
-เก็บที่ `~/.claude/agents/` หรือ `.claude/agents/`
+เก็บใน `~/.claude/agents/` หรือ `.claude/agents/`
 
 ---
 
 ## Agent Features
 
-- **Persistent Memory** — จำข้าม session ได้ <!-- .element: class="fragment" -->
-- **Preloaded Skills** — inject skill content ตอน start <!-- .element: class="fragment" -->
-- **Hooks** — PreToolUse, PostToolUse ใน agent <!-- .element: class="fragment" -->
-- **Background** — รันพร้อมกันได้ กด Ctrl+B <!-- .element: class="fragment" -->
+- **Persistent Memory** — จำต่อได้ทุก session
+- **Preloaded Skills** — โหลด skill ให้พร้อมตั้งแต่เริ่ม <!-- .element: class="fragment" -->
+- **Hooks** — ใส่ PreToolUse, PostToolUse ใน agent ได้ <!-- .element: class="fragment" -->
+- **Background** — รันพร้อมกัน กด Ctrl+B <!-- .element: class="fragment" -->
 - **Resume** — กลับมาต่อจากที่ค้างได้ <!-- .element: class="fragment" -->
 
 ```yaml
-memory: user          # จำข้าม session
+memory: user          # จำต่อทุก session
 skills:
-  - api-conventions   # inject skill
+  - api-conventions   # โหลดให้พร้อม
   - error-handling
 ```
 
@@ -436,12 +436,12 @@ claude --agent my-agent   # ใช้ agent เป็น main
 
 ## Takeaways
 
-1. **Claude Code = Terminal + IDE + Web + Desktop** — ใช้ได้ทุกที่ <!-- .element: class="fragment" -->
-2. **CLAUDE.md = Memory** — บอก Claude เรื่อง project <!-- .element: class="fragment" -->
-3. **Skills = Custom Commands** — สร้างจาก Markdown <!-- .element: class="fragment" -->
-4. **Hooks = Automation** — auto-format, validate, guard <!-- .element: class="fragment" -->
-5. **MCP = เชื่อมทุกอย่าง** — DB, GitHub, Slack, Jira <!-- .element: class="fragment" -->
-6. **Sub-agents = Delegation** — แบ่งงานให้ agent เฉพาะทาง <!-- .element: class="fragment" -->
+1. **Claude Code ทำงานได้ทุกที่** — Terminal, IDE, Web, Desktop
+2. **CLAUDE.md คือความจำ** — บอก Claude รู้จัก project <!-- .element: class="fragment" -->
+3. **Skills = คำสั่งของเรา** — สร้างจาก Markdown <!-- .element: class="fragment" -->
+4. **Hooks ทำงานอัตโนมัติ** — format, validate, guard <!-- .element: class="fragment" -->
+5. **MCP ต่อทุกอย่าง** — DB, GitHub, Slack, Jira <!-- .element: class="fragment" -->
+6. **Sub-agents แบ่งงาน** — ให้คนถูกทำงานถูก <!-- .element: class="fragment" -->
 
 ---
 
