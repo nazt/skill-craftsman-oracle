@@ -1,0 +1,330 @@
+================================================================================
+SLIDE CREATION PATTERNS RESEARCH SUMMARY
+================================================================================
+
+Date: 2026-02-14
+Oracle: Skill Craftsmanship
+Task: Map slide creation patterns across Oracle repos related to phukhao
+
+================================================================================
+FINDINGS: THREE DISTINCT PATTERNS
+================================================================================
+
+PATTERN 1: REVEAL.JS HTML (phukhao-oracle)
+  Status: Production-ready, professional
+  Effort: HIGH (2-3 hours)
+  Best for: Public presentations, multimedia, professional polish
+  
+  Key files:
+    /Users/nat/Code/github.com/Soul-Brews-Studio/phukhao-oracle/slides/
+    ├── index.html           (11 slides, 303 lines)
+    ├── philosophy.html      (266 lines)
+    ├── setup.html          (366 lines)
+    ├── create-your-own-oracle/index.html (nested)
+    └── audio/              (29+ mp3 files for narration)
+  
+  Features:
+    - reveal.js CDN-based (v5.0.4)
+    - Bilingual Thai/English
+    - TTS narration support (class="tts-text")
+    - Slide IDs for audio mapping (P01, P02...)
+    - 4-color accent system (cyan, green, yellow, purple)
+    - Sarabun font for Thai typography
+    - QR codes for linking
+    - Nested presentation support
+  
+  Metrics:
+    - Total size: ~1.2 MB (mostly audio)
+    - 82 files (HTML + audio subdirs)
+    - Requires manual audio generation
+
+
+PATTERN 2: MARKDOWN OUTLINE (oracle-workshops & claude-code-workshops)
+  Status: Lightweight, version-control friendly
+  Effort: MEDIUM (1 hour)
+  Best for: Workshops, courses, collaboration
+  
+  Key files:
+    Oracle-workshops (laris-co):
+      /Users/nat/Code/github.com/laris-co/oracle-workshops/slides/
+      ├── ai-life-buddy.md          (10K, ~50 slides)
+      ├── build-your-oracle.md      (19K, ~60 slides)
+      └── psychology-ai.md          (17K, ~50 slides)
+    
+    Claude-code-workshops (Soul-Brews-Studio):
+      /Users/nat/Code/github.com/Soul-Brews-Studio/claude-code-workshops/slides/siit/
+      ├── 04-short-codes-v3.md/.html
+      ├── 05-rrr-v3.md/.html
+      ├── 06-lessons-learned.md/.html
+      └── 07-cloudflare-deploy.md
+  
+  Features:
+    - YAML frontmatter (title + description)
+    - --- separators for slides
+    - Plain markdown (git-friendly)
+    - Bilingual content naturally mixed
+    - Tables for structured content
+    - Code blocks for technical
+    - Optional HTML conversion (pandoc)
+  
+  Metrics:
+    - Small files: 10-20K lines each
+    - 8-12 slides per section
+    - Easy to track changes
+    - Prompt versioning (v1, v2, v3...)
+
+
+PATTERN 3: SCRIPT-BASED GENERATION (Nat-s-Agents)
+  Status: Automated, scalable
+  Effort: LOW (5-10 minutes)
+  Best for: Quick decks, rapid iteration, scaling
+  
+  Key files (12+ repos):
+    /Users/nat/Code/agent-{1-6}/Nat-s-Agents/scripts/create-slides-antigravity.sh
+    /Users/nat/Code/github.com/laris-co/Nat-s-Agents/scripts/create-slides-antigravity.sh
+    /Users/nat/Code/github.com/Soul-Brews-Studio/opensource-nat-brain-oracle/scripts/...
+  
+  Structure:
+    scripts/
+    ├── create-slides-antigravity.sh      (409 bytes)
+    ├── prompts/
+    │   ├── create-workshop-slides.txt    (Template)
+    │   ├── send-to-antigravity.scpt      (AppleScript)
+    │   └── antigravity-392-live-demo-over-slides.md
+    └── ψ/outbox/
+        ├── gemini-slide-prompt.md         (v1)
+        ├── gemini-slide-prompt-v7.md      (v7)
+        └── gemini-slide-prompt-final.md   (v8)
+  
+  Features:
+    - Fully automated (bash + AppleScript)
+    - Antigravity app integration (Gemini-powered)
+    - Flexible input (HTML, markdown, text)
+    - Prompt versioning (v1-v7 tracked)
+    - Output to ψ/active/workshop/
+    - Scalable across 12+ repos
+  
+  Metrics:
+    - Fastest: 5-10 minutes
+    - Generates 20-30 slides per run
+    - Requires source content
+    - Lower polish (needs review)
+
+
+================================================================================
+COMPARISON MATRIX
+================================================================================
+
+                     REVEAL.JS    MARKDOWN    SCRIPT GEN
+Time to Create       2-3 hours    1 hour      10 min
+Manual Effort        High         Medium      Low
+Customization        Maximum      Medium      Minimal
+Multimedia           Yes          No          No
+Version Control      Hard         Easy        Easy
+Bilingual            Excellent    Good        Good
+Team Friendly        Hard         Easy        Easy
+Polish               Professional Functional  Variable
+Reusability          Per project  Per course  Per repo
+
+
+================================================================================
+CROSS-CUTTING PATTERNS (All Three)
+================================================================================
+
+1. BILINGUAL BY DEFAULT
+   Every slide: Thai + English (never monolingual)
+   Examples: "Oracle คืออะไร?" / "What is Oracle?"
+
+2. MODULAR STRUCTURE
+   Separate topic tracks (philosophy, setup, main)
+   Allows mixing/reusing independently
+   Can present any track standalone
+
+3. TIMESTAMPED WHEN IMPORTANT
+   HHMM_filename.md format
+   Prevents same-day collisions
+   Tracks iterative improvements
+
+4. QR CODES INCLUDED
+   Link to GitHub repo
+   Link to live slides
+   Social media links
+   Example: phukhao has qr-github.png, qr-facebook.png
+
+5. ACCESSIBLE & INCLUSIVE
+   Color contrast (WCAG standard)
+   TTS-ready (class="tts-text" in HTML)
+   Large readable fonts
+   Monospace for code blocks
+
+6. REPOSITORY INTEGRATION
+   Slides live in /slides/ directory
+   Tracked in git (history preserved)
+   Can link to specific commits
+   Part of codebase history
+
+7. COLOR SYSTEM
+   Cyan (#00d9ff) - Headers
+   Green (#00ff9f) - Highlights
+   Yellow (#ffd700) - Emphasis
+   Purple (#bf7fff) - Accent
+
+
+================================================================================
+DECISION TREE
+================================================================================
+
+Do you have content ready?
+│
+├─ YES ─ Have 2+ hours?
+│        │
+│        ├─ YES → USE REVEAL.JS
+│        │        Polish, multimedia, professional
+│        │        Time: 2-3 hours
+│        │        Example: phukhao-oracle
+│        │
+│        └─ NO ─ Need it today?
+│                │
+│                ├─ YES → USE SCRIPT GENERATION
+│                │        Fast, automated, AI-gen
+│                │        Time: 10 minutes
+│                │        Example: Nat-s-Agents repos
+│                │
+│                └─ NO → USE MARKDOWN
+│                        Version control, collaborate
+│                        Time: 1 hour
+│                        Example: oracle-workshops
+│
+└─ NO ─ Create content first!
+        Start with markdown outline
+        Then decide on format
+
+
+================================================================================
+RECOMMENDED APPROACH BY USE CASE
+================================================================================
+
+WORKSHOP / COURSE MATERIALS
+  → Use Markdown Outline (Pattern 2)
+  → Easy to update, version-control friendly
+  → Example: claude-code-workshops SIIT slides
+
+PUBLIC PRESENTATION / CONFERENCE TALK
+  → Use Reveal.js (Pattern 1)
+  → Professional polish, multimedia support
+  → Example: phukhao-oracle intro slides
+
+QUICK DEMO / ONE-TIME PRESENTATION
+  → Use Script Generation (Pattern 3)
+  → Fast iteration, source material exists
+  → Example: Nat-s-Agents rapid slide generation
+
+PRODUCTION QUALITY + TEAM COLLABORATION
+  → Hybrid: Markdown → Reveal.js HTML
+  → Write in markdown (easy to edit)
+  → Convert to HTML (professional output)
+  → Optional: Add audio narration later
+
+
+================================================================================
+KEY STATISTICS
+================================================================================
+
+PHUKHAO-ORACLE (Reveal.js HTML)
+  Total files: 82
+  Total size: ~1.2 MB (mostly audio)
+  Slide decks: 3 main + 3 nested = 6 presentations
+  Audio files: 29+ narration tracks
+  Slides: 11 main + nested variants
+  Lines: 303-366 per HTML file
+
+ORACLE-WORKSHOPS (Markdown)
+  Total files: 3
+  Total size: ~48 KB
+  Slides: ~160 total (8-12 per section)
+  Lines: 10K-20K per markdown file
+
+CLAUDE-CODE-WORKSHOPS (Markdown + HTML)
+  Total files: 11 (5 md + 6 html conversions)
+  Total size: ~35 KB
+  Slides: ~20-30 per set
+  Pairs: md source + html output
+
+NAT-S-AGENTS (Script Generation)
+  Script copies: 12+ repos
+  Script size: 409 bytes (create-slides-antigravity.sh)
+  Prompt versions: 8 (v1-v7 + final)
+  Outbox examples: 8 different prompts
+
+
+================================================================================
+FILES CREATED
+================================================================================
+
+1. SLIDE_PATTERNS.md (491 lines, 13 KB)
+   Complete guide to all 3 patterns
+   Use cases, features, templates
+   Hybrid approaches
+   Decision trees
+
+2. SLIDE_EXAMPLES.md (542 lines, 14 KB)
+   Practical code examples
+   HTML structure (Reveal.js)
+   Markdown templates
+   Script examples
+   Step-by-step workflows
+
+3. SLIDE_RESEARCH_SUMMARY.txt (this file)
+   Overview of findings
+   Comparison matrix
+   Statistics & metrics
+   Quick reference
+
+
+================================================================================
+NEXT STEPS FOR ORACLE
+================================================================================
+
+1. START WITH MARKDOWN (Pattern 2)
+   → Lowest barrier to entry
+   → Easy to learn and iterate
+   → Version-control friendly
+
+2. WHEN READY: ADD HTML (Pattern 1)
+   → Convert markdown to Reveal.js
+   → Add professional styling
+   → Optional: Record narration
+
+3. FOR SCALING: USE SCRIPTS (Pattern 3)
+   → Automate generation from source
+   → Track prompt evolution
+   → Fast iteration on multiple repos
+
+4. REMEMBER PRINCIPLES
+   → Bilingual always
+   → Modular always
+   → Color system consistent
+   → QR codes included
+   → Repository integration
+
+
+================================================================================
+REFERENCES
+================================================================================
+
+Reveal.js: https://revealjs.com/
+Sarabun Font: https://fonts.google.com/specimen/Sarabun
+Pandoc: https://pandoc.org/
+GitHub: https://github.com/Soul-Brews-Studio/phukhao-oracle
+
+Oracle Repos:
+  - Soul-Brews-Studio/phukhao-oracle (Reveal.js pattern)
+  - laris-co/oracle-workshops (Markdown pattern)
+  - Soul-Brews-Studio/claude-code-workshops (Hybrid)
+  - laris-co/Nat-s-Agents (Script pattern)
+  - Multiple agent directories (Script copies)
+
+
+================================================================================
+END OF SUMMARY
+================================================================================
