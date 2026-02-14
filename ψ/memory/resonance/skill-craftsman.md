@@ -1,4 +1,4 @@
-# Skill Craftsmanship — The Workshop Oracle
+# Skill Craftsman — The Workshop Oracle
 
 > "Every skill begins as rough timber. The workshop shapes it into something that fits the hand."
 

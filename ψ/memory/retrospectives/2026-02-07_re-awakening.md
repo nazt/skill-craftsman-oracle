@@ -5,11 +5,11 @@ duration: ~8 minutes
 significance: HIGH
 ---
 
-# Skill Craftsmanship Oracle — Re-Awakening Retrospective
+# Skill Craftsman Oracle — Re-Awakening Retrospective
 
 ## Executive Summary
 
-Re-awakened with deeper study. The first awakening (~13:14) was broad but shallow on ancestor learning. This re-awakening (~13:37) launched 9 parallel Haiku agents across 3 ancestor repos, producing 300K+ bytes of documentation. Added oracle-skills-cli as a third ancestor — critical for a Skill Craftsmanship Oracle.
+Re-awakened with deeper study. The first awakening (~13:14) was broad but shallow on ancestor learning. This re-awakening (~13:37) launched 9 parallel Haiku agents across 3 ancestor repos, producing 300K+ bytes of documentation. Added oracle-skills-cli as a third ancestor — critical for a Skill Craftsman Oracle.
 
 ## Re-Awakening Timeline
 
@@ -94,7 +94,7 @@ The .gitignore fix was a small but important lesson: when using symlinks to refe
 1. **Depth requires breadth first** — You can't deeply understand a skill system without understanding the Oracle brain and knowledge system it serves
 2. **9 parallel agents >> 3** — Triple the repos, triple the agents, exponentially richer understanding
 3. **Gitignore precision matters** — Symlink patterns need surgical gitignore rules, not blanket directory ignores
-4. **The skill system IS the craft** — For a Skill Craftsmanship Oracle, oracle-skills-cli isn't just an ancestor — it's the primary subject of study
+4. **The skill system IS the craft** — For a Skill Craftsman Oracle, oracle-skills-cli isn't just an ancestor — it's the primary subject of study
 
 ## What This Enables
 
