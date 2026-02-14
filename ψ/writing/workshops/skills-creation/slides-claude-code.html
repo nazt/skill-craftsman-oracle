@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code — Deep Dive / Fortal 2026</title>
+
+    <!-- Reveal.js 5.x -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" id="theme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css">
+
+    <!-- Thai Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --r-main-font: 'Sarabun', sans-serif;
+            --r-heading-font: 'Sarabun', sans-serif;
+            --r-code-font: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+            --r-heading-color: #00d9ff;
+            --r-background-color: #0d1117;
+            --r-main-color: #e6edf3;
+            --r-main-font-size: 38px;
+            --r-heading-text-transform: none;
+        }
+        .reveal h1 { font-size: 2.2em; color: #00d9ff; }
+        .reveal h2 { font-size: 1.6em; color: #00d9ff; }
+        .reveal h3 { font-size: 1.3em; color: #00ff9f; }
+        .reveal strong { color: #ffd700; }
+        .reveal code { color: #00d9ff; }
+        .reveal pre code { color: inherit; }
+        .reveal pre {
+            font-size: 0.55em;
+            width: 92%;
+        }
+        .reveal pre code {
+            max-height: 480px;
+            padding: 16px;
+            border-radius: 10px;
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .reveal table {
+            font-size: 0.7em;
+            border-collapse: collapse;
+            margin: 0.5em auto;
+        }
+        .reveal table th {
+            background: rgba(0, 217, 255, 0.2);
+            font-weight: 700;
+        }
+        .reveal table th,
+        .reveal table td {
+            border: 1px solid #444;
+            padding: 10px 20px;
+            text-align: left;
+        }
+        .reveal blockquote {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            font-style: normal;
+            width: 85%;
+            font-size: 0.9em;
+        }
+        .reveal ul, .reveal ol {
+            display: block;
+            margin-left: 1em;
+        }
+        .reveal li {
+            margin-bottom: 0.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section data-markdown data-separator="\n\n---\n\n" data-separator-notes="^Note:">
+                <textarea data-template>
+# Claude Code
+
+**เครื่องมือ Agentic Coding ที่อ่าน, แก้, และรัน**
+
+Nat (Weerawan) — Fortal AI Agent Learning
+
+---
+
+> "Claude Code reads your codebase, edits files, runs commands, and integrates with your development tools."
+
+---
+
+## Claude Code คืออะไร?
+
+Agentic coding tool ที่ทำงานได้ทุกที่
+
+- **Terminal** — CLI เต็มรูปแบบ <!-- .element: class="fragment" -->
+- **VS Code / Cursor** — inline diffs, @-mentions <!-- .element: class="fragment" -->
+- **JetBrains** — IntelliJ, PyCharm, WebStorm <!-- .element: class="fragment" -->
+- **Desktop App** — standalone, หลาย session พร้อมกัน <!-- .element: class="fragment" -->
+- **Web / iOS** — ไม่ต้องติดตั้ง, ทำงานจากมือถือได้ <!-- .element: class="fragment" -->
+
+---
+
+## Install
+
+```bash
+# macOS, Linux, WSL
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Homebrew
+brew install --cask claude-code
+
+# Windows PowerShell
+irm https://claude.ai/install.ps1 | iex
+```
+
+แล้วเริ่มใช้งาน:
+
+```bash
+cd your-project && claude
+```
+
+---
+
+## ทำอะไรได้บ้าง?
+
+- **สร้าง feature** — บอกเป็นภาษาคน Claude เขียน code ให้ <!-- .element: class="fragment" -->
+- **แก้ bug** — paste error message, Claude หา root cause <!-- .element: class="fragment" -->
+- **Git workflow** — commit, branch, PR อัตโนมัติ <!-- .element: class="fragment" -->
+- **เชื่อมเครื่องมือ** — MCP เชื่อม Jira, Slack, DB <!-- .element: class="fragment" -->
+- **Pipe & Script** — ใช้ร่วมกับ CLI อื่นได้ <!-- .element: class="fragment" -->
+
+---
+
+## CLAUDE.md — Memory
+
+ไฟล์ Markdown ที่ Claude อ่านทุกครั้งที่เริ่ม session
+
+```
+project/
+├── CLAUDE.md          # ทีมใช้ร่วมกัน
+├── CLAUDE.local.md    # ส่วนตัว (gitignored)
+└── .claude/
+    ├── CLAUDE.md      # project config
+    └── rules/
+        ├── testing.md # เฉพาะเรื่อง testing
+        └── api.md     # เฉพาะเรื่อง API
+```
+
+---
+
+## Memory Hierarchy
+
+| Level | ไฟล์ | Scope |
+|-------|------|-------|
+| **Managed** | `/Library/.../CLAUDE.md` | ทั้งองค์กร |
+| **User** | `~/.claude/CLAUDE.md` | ทุก project |
+| **Project** | `./CLAUDE.md` | ทีมนี้ |
+| **Local** | `./CLAUDE.local.md` | ตัวเอง |
+| **Auto** | `~/.claude/projects/*/memory/` | Claude จดเอง |
+
+**Auto Memory** — Claude จดบันทึกเอง ไม่ต้องสั่ง
+
+---
+
+## Skills — Custom Slash Commands
+
+### สร้าง `/command` ของตัวเอง
+
+```yaml
+---
+name: explain-code
+description: Explains code with diagrams.
+  Use when asking "how does this work?"
+---
+
+When explaining code:
+1. Start with an analogy
+2. Draw ASCII diagram
+3. Walk through step-by-step
+4. Highlight gotchas
+```
+
+**ใช้งาน**: `/explain-code src/auth.ts`
+
+---
+
+## Skills อยู่ที่ไหน?
+
+| Location | Path | ใครใช้ได้ |
+|----------|------|-----------|
+| **Personal** | `~/.claude/skills/` | ตัวเอง ทุก project |
+| **Project** | `.claude/skills/` | ทีมเดียวกัน |
+| **Plugin** | `<plugin>/skills/` | ตามที่ enable |
+| **Enterprise** | managed settings | ทั้งองค์กร |
+
+---
+
+## Skill Frontmatter
+
+```yaml
+---
+name: deploy
+description: Deploy to production
+disable-model-invocation: true  # user-only
+context: fork                   # run in subagent
+agent: Explore                  # agent type
+allowed-tools: Read, Grep, Bash
+model: sonnet
+---
+```
+
+| Field | Effect |
+|-------|--------|
+| `disable-model-invocation` | Claude ไม่เรียกเอง |
+| `context: fork` | รันใน subagent แยก |
+| `allowed-tools` | จำกัด tools ที่ใช้ |
+
+---
+
+## Dynamic Context
+
+**`!`command``** — รัน shell ก่อนส่งให้ Claude
+
+```yaml
+---
+name: pr-summary
+context: fork
+agent: Explore
+---
+
+## PR Context
+- Diff: !`gh pr diff`
+- Comments: !`gh pr view --comments`
+- Files: !`gh pr diff --name-only`
+
+Summarize this PR...
+```
+
+ข้อมูลถูก inject ก่อน Claude เห็น
+
+---
+
+## Hooks — Automation
+
+Shell commands ที่รันอัตโนมัติตาม lifecycle
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "prettier --write $FILE"
+      }]
+    }]
+  }
+}
+```
+
+**แก้ไฟล์ → format อัตโนมัติ**
+
+---
+
+## Hook Events
+
+| Event | เมื่อไหร่ | Block ได้? |
+|-------|----------|-----------|
+| **SessionStart** | เริ่ม session | ไม่ |
+| **UserPromptSubmit** | user พิมพ์ | ได้ |
+| **PreToolUse** | ก่อนใช้ tool | ได้ |
+| **PostToolUse** | หลังใช้ tool | ไม่ |
+| **Stop** | Claude หยุด | ได้ |
+| **SubagentStart/Stop** | subagent เริ่ม/จบ | บางส่วน |
+
+---
+
+## Hook Types
+
+3 แบบ เลือกตามความต้องการ
+
+| Type | ทำอะไร | ตัวอย่าง |
+|------|--------|---------|
+| **command** | รัน shell | `prettier`, `eslint` |
+| **prompt** | ถาม LLM | "ทำเสร็จหรือยัง?" |
+| **agent** | spawn subagent | ตรวจ test ก่อนหยุด |
+
+```json
+{
+  "type": "prompt",
+  "prompt": "Check if all tasks complete: $ARGUMENTS"
+}
+```
+
+---
+
+## MCP — Model Context Protocol
+
+เชื่อม Claude กับเครื่องมือภายนอก
+
+```bash
+# เพิ่ม GitHub
+claude mcp add --transport http github \
+  https://api.githubcopilot.com/mcp/
+
+# เพิ่ม Sentry
+claude mcp add --transport http sentry \
+  https://mcp.sentry.dev/mcp
+
+# เพิ่ม PostgreSQL
+claude mcp add --transport stdio db \
+  -- npx -y @bytebase/dbhub \
+  --dsn "postgresql://..."
+```
+
+---
+
+## MCP Scopes
+
+| Scope | เก็บที่ไหน | แชร์ |
+|-------|-----------|------|
+| **Local** | `~/.claude.json` | ไม่ (default) |
+| **Project** | `.mcp.json` | commit ได้ |
+| **User** | `~/.claude.json` | ทุก project |
+| **Managed** | system dir | ทั้งองค์กร |
+
+```bash
+# จัดการ
+claude mcp list
+claude mcp get github
+claude mcp remove github
+/mcp  # ใน Claude Code
+```
+
+---
+
+## Sub-agents
+
+Agent แยกที่ทำงานเฉพาะทาง
+
+| Agent | Model | เก่งเรื่อง |
+|-------|-------|-----------|
+| **Explore** | Haiku | ค้นหา, อ่าน code (read-only) |
+| **Plan** | inherit | วิเคราะห์ก่อนวางแผน |
+| **general-purpose** | inherit | ทำได้ทุกอย่าง |
+| **Custom** | เลือกเอง | ออกแบบเอง |
+
+---
+
+## Custom Sub-agent
+
+```markdown
+---
+name: code-reviewer
+description: Reviews code for quality
+tools: Read, Grep, Glob, Bash
+model: sonnet
+memory: user
+---
+
+You are a senior code reviewer.
+Review for quality, security, best practices.
+
+Provide feedback by priority:
+- Critical (must fix)
+- Warnings (should fix)
+- Suggestions (consider)
+```
+
+เก็บที่ `~/.claude/agents/` หรือ `.claude/agents/`
+
+---
+
+## Agent Features
+
+- **Persistent Memory** — จำข้าม session ได้ <!-- .element: class="fragment" -->
+- **Preloaded Skills** — inject skill content ตอน start <!-- .element: class="fragment" -->
+- **Hooks** — PreToolUse, PostToolUse ใน agent <!-- .element: class="fragment" -->
+- **Background** — รันพร้อมกันได้ กด Ctrl+B <!-- .element: class="fragment" -->
+- **Resume** — กลับมาต่อจากที่ค้างได้ <!-- .element: class="fragment" -->
+
+```yaml
+memory: user          # จำข้าม session
+skills:
+  - api-conventions   # inject skill
+  - error-handling
+```
+
+---
+
+## Architecture Overview
+
+```
+┌─────────────────────────────┐
+│       Claude Code           │
+├─────────────────────────────┤
+│  CLAUDE.md    Auto Memory   │  ← Memory
+│  Skills       Commands      │  ← Extensions
+│  Hooks        Permissions   │  ← Automation
+│  MCP Servers  Plugins       │  ← Integrations
+├─────────────────────────────┤
+│  Sub-agents   Agent Teams   │  ← Delegation
+│  Explore │ Plan │ Custom    │
+└─────────────────────────────┘
+```
+
+---
+
+## Cheat Sheet
+
+```bash
+# Install
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Memory
+claude /init              # สร้าง CLAUDE.md
+claude /memory            # แก้ไข memory
+
+# Skills
+mkdir -p .claude/skills/my-skill
+# เขียน SKILL.md แล้วใช้ /my-skill
+
+# MCP
+claude mcp add --transport http name url
+claude mcp list
+
+# Agents
+claude /agents            # จัดการ agents
+claude --agent my-agent   # ใช้ agent เป็น main
+```
+
+---
+
+## Takeaways
+
+1. **Claude Code = Terminal + IDE + Web + Desktop** — ใช้ได้ทุกที่ <!-- .element: class="fragment" -->
+2. **CLAUDE.md = Memory** — บอก Claude เรื่อง project <!-- .element: class="fragment" -->
+3. **Skills = Custom Commands** — สร้างจาก Markdown <!-- .element: class="fragment" -->
+4. **Hooks = Automation** — auto-format, validate, guard <!-- .element: class="fragment" -->
+5. **MCP = เชื่อมทุกอย่าง** — DB, GitHub, Slack, Jira <!-- .element: class="fragment" -->
+6. **Sub-agents = Delegation** — แบ่งงานให้ agent เฉพาะทาง <!-- .element: class="fragment" -->
+
+---
+
+# ขอบคุณ!
+
+**Nat (Weerawan)** — github.com/nazt
+
+Fortal AI Agent Learning
+
+> "Claude Code is not just a tool. It's a platform for building your own AI workflows."
+                </textarea>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js Core -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: true,
+            transition: 'none',
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        });
+    </script>
+</body>
+</html>
