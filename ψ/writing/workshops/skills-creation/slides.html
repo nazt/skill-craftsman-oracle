@@ -99,10 +99,10 @@
 ไม่ต้องเขียนโค้ดก่อนก็ได้ เริ่มจาก **Markdown** ธรรมดา
 
 ### สิ่งที่คุณจะได้จากวันนี้:
-- เข้าใจสถาปัตยกรรม Skill (Skill Architecture)
-- สร้าง Simple Skill ได้ด้วยตัวเอง
-- เข้าใจ Parallel Agent Pattern
-- ได้ Skill ที่ใช้งานได้จริงกลับบ้าน
+- เข้าใจสถาปัตยกรรม Skill (Skill Architecture) <!-- .element: class="fragment" -->
+- สร้าง Simple Skill ได้ด้วยตัวเอง <!-- .element: class="fragment" -->
+- เข้าใจ Parallel Agent Pattern <!-- .element: class="fragment" -->
+- ได้ Skill ที่ใช้งานได้จริงกลับบ้าน <!-- .element: class="fragment" -->
 
 ---
 
@@ -145,9 +145,9 @@ Claude Code อ่านไฟล์ SKILL.md แล้วทำตาม step-b
 | **Ritual** | Ritual Chamber (ห้องพิธี) | Multi-step guided | `/awaken`, `/rrr` | 15-20 min |
 
 ### เปรียบเทียบง่ายๆ:
-- **Simple** = สั่งกาแฟ 1 แก้ว ☕
-- **Parallel** = สั่ง 3 คนไปหาข้อมูลพร้อมกัน 🔍🔍🔍
-- **Ritual** = พิธีกรรม ต้องทำครบทุก step 📜
+- **Simple** = สั่งกาแฟ 1 แก้ว ☕ <!-- .element: class="fragment" -->
+- **Parallel** = สั่ง 3 คนไปหาข้อมูลพร้อมกัน 🔍🔍🔍 <!-- .element: class="fragment" -->
+- **Ritual** = พิธีกรรม ต้องทำครบทุก step 📜 <!-- .element: class="fragment" -->
 
 ---
 
@@ -158,10 +158,10 @@ Claude Code อ่านไฟล์ SKILL.md แล้วทำตาม step-b
 Skill ไม่ใช่ plugin, ไม่ใช่ API, ไม่ใช่ extension
 
 Skill คือ **markdown file** ที่บอก Claude ว่า:
-1. Skill นี้ชื่ออะไร (name)
-2. ใช้ตอนไหน (description)
-3. ทำอะไรบ้าง (steps)
-4. output เป็นแบบไหน (format)
+1. Skill นี้ชื่ออะไร (name) <!-- .element: class="fragment" -->
+2. ใช้ตอนไหน (description) <!-- .element: class="fragment" -->
+3. ทำอะไรบ้าง (steps) <!-- .element: class="fragment" -->
+4. output เป็นแบบไหน (format) <!-- .element: class="fragment" -->
 
 > คิดว่าเป็น **SOP (Standard Operating Procedure)** สำหรับ AI
 
@@ -230,9 +230,9 @@ Claude เข้าใจทันทีว่า: user พูดถึง feeli
 
 ## Description: หลักการเขียน
 
-- ใส่ **action words** -- Log, Search, Create, Track
-- ใส่ **use cases** -- when feeling..., when you need to...
-- ใส่ **keywords** ที่ user น่าจะพิมพ์
+- ใส่ **action words** -- Log, Search, Create, Track <!-- .element: class="fragment" -->
+- ใส่ **use cases** -- when feeling..., when you need to... <!-- .element: class="fragment" -->
+- ใส่ **keywords** ที่ user น่าจะพิมพ์ <!-- .element: class="fragment" -->
 
 > Description ดีๆ สำคัญกว่า code เก่งๆ
 
@@ -262,9 +262,9 @@ Claude เข้าใจทันทีว่า: user พูดถึง feeli
 ## Steps Pattern: สิ่งสำคัญ
 
 ### Pattern สำคัญ:
-- **Step 0** มักเป็น Timestamp (เพื่อ traceability)
-- **Step สุดท้าย** มักเป็น Output/Confirm
-- เขียนเป็น **ภาษาคน** ไม่ใช่ code -- Claude เข้าใจ natural language
+- **Step 0** มักเป็น Timestamp (เพื่อ traceability) <!-- .element: class="fragment" -->
+- **Step สุดท้าย** มักเป็น Output/Confirm <!-- .element: class="fragment" -->
+- เขียนเป็น **ภาษาคน** ไม่ใช่ code -- Claude เข้าใจ natural language <!-- .element: class="fragment" -->
 
 ---
 
@@ -377,10 +377,10 @@ ARGUMENTS: $ARGUMENTS
 
 # Claude อ่าน Markdown นี้แล้วทำตามเป็นคำสั่ง ไม่ต้องเขียน Code!
 
-- ไม่มี compiler
-- ไม่มี runtime
-- ไม่มี dependency
-- ไม่มี build step
+- ไม่มี compiler <!-- .element: class="fragment" -->
+- ไม่มี runtime <!-- .element: class="fragment" -->
+- ไม่มี dependency <!-- .element: class="fragment" -->
+- ไม่มี build step <!-- .element: class="fragment" -->
 
 **Markdown in, behavior out.**
 
@@ -512,9 +512,9 @@ Timestamp: 2026-02-14T10:00:00+07:00
 (ไม่ใส่ชื่อ -- ดูว่า Claude handle ได้มั้ย)
 
 ### ถ้าไม่ work:
-1. ตรวจ frontmatter: `---` ครบทั้งบน-ล่างมั้ย?
-2. ตรวจ name: ตรงกับ folder name มั้ย?
-3. ตรวจ path: อยู่ใน `.claude/commands/` มั้ย?
+1. ตรวจ frontmatter: `---` ครบทั้งบน-ล่างมั้ย? <!-- .element: class="fragment" -->
+2. ตรวจ name: ตรงกับ folder name มั้ย? <!-- .element: class="fragment" -->
+3. ตรวจ path: อยู่ใน `.claude/commands/` มั้ย? <!-- .element: class="fragment" -->
 
 ---
 
@@ -625,11 +625,11 @@ const output = await $`git log --oneline`.text();
 
 ## Bun Shell: ข้อดี
 
-- **Cleaner syntax** -- template literal, อ่านง่าย
-- **Auto-escape** -- ปลอดภัยจาก injection
-- **Type-safe** -- TypeScript built-in
-- **Fast** -- Bun เร็วกว่า Node.js 3-5x
-- **Built-in** -- ไม่ต้อง import child_process
+- **Cleaner syntax** -- template literal, อ่านง่าย <!-- .element: class="fragment" -->
+- **Auto-escape** -- ปลอดภัยจาก injection <!-- .element: class="fragment" -->
+- **Type-safe** -- TypeScript built-in <!-- .element: class="fragment" -->
+- **Fast** -- Bun เร็วกว่า Node.js 3-5x <!-- .element: class="fragment" -->
+- **Built-in** -- ไม่ต้อง import child_process <!-- .element: class="fragment" -->
 
 ---
 
@@ -736,10 +736,10 @@ console.log(`## Recent Commits\n\n${log}`);
 ```
 
 ### สิ่งที่ skill นี้ทำ:
-1. รับ search query จาก user
-2. ค้นหาใน git log (commit messages)
-3. ค้นหาใน git diff (code changes)
-4. แสดงผลลัพธ์เป็น markdown
+1. รับ search query จาก user <!-- .element: class="fragment" -->
+2. ค้นหาใน git log (commit messages) <!-- .element: class="fragment" -->
+3. ค้นหาใน git diff (code changes) <!-- .element: class="fragment" -->
+4. แสดงผลลัพธ์เป็น markdown <!-- .element: class="fragment" -->
 
 > สังเกต: SKILL.md บอก Claude ว่าทำอะไร
 > scripts/main.ts ทำหน้าที่ดึง data จาก git
@@ -841,9 +841,9 @@ bun init -y      # สร้าง project (ถ้ายังไม่มี)
 **1 agent**: อ่าน README แล้วสรุป (ผิวเผิน)
 
 **3 agents พร้อมกัน**:
-- Agent 1: สำรวจ architecture
-- Agent 2: อ่าน core logic
-- Agent 3: ศึกษา tests
+- Agent 1: สำรวจ architecture <!-- .element: class="fragment" -->
+- Agent 2: อ่าน core logic <!-- .element: class="fragment" -->
+- Agent 3: ศึกษา tests <!-- .element: class="fragment" -->
 
 > เหมือนส่ง 3 คนไปสำรวจเมืองใหม่ แต่ละคนเห็นคนละมุม -- รวมกันได้ภาพเต็ม
 
@@ -934,10 +934,10 @@ Each subagent gets a different focus area.
 ```
 
 ### สิ่งที่จะเกิดขึ้น:
-1. Orchestrator (Opus) วิเคราะห์ repo
-2. Spawn 1 Haiku subagent
-3. Haiku สำรวจ structure + key files
-4. Opus สังเคราะห์เป็น report
+1. Orchestrator (Opus) วิเคราะห์ repo <!-- .element: class="fragment" -->
+2. Spawn 1 Haiku subagent <!-- .element: class="fragment" -->
+3. Haiku สำรวจ structure + key files <!-- .element: class="fragment" -->
+4. Opus สังเคราะห์เป็น report <!-- .element: class="fragment" -->
 
 > สังเกต output: เป็น markdown file ที่มี timestamp ใน filename
 > สังเกตเวลา: ~2 นาที (fast mode)
@@ -1207,11 +1207,11 @@ oracle-skills install -s my-skill -g -y  # global
 
 ## Key Takeaways / สิ่งที่ได้จากวันนี้
 
-1. **Skill = Markdown** -- ไม่ต้องเขียน code ก็สร้างได้
-2. **Description สำคัญที่สุด** -- เป็น trigger ที่บอก AI ว่าจะใช้เมื่อไหร่
-3. **3 ตระกูล** -- Simple, Parallel, Ritual -- เลือกให้เหมาะกับงาน
-4. **Bun Shell** -- เพิ่ม code เมื่อต้องการ data จริงจาก system
-5. **ทุกคนสร้าง Skill ได้** -- เริ่มจาก Simple แล้วค่อยขยาย
+1. **Skill = Markdown** -- ไม่ต้องเขียน code ก็สร้างได้ <!-- .element: class="fragment" -->
+2. **Description สำคัญที่สุด** -- เป็น trigger ที่บอก AI ว่าจะใช้เมื่อไหร่ <!-- .element: class="fragment" -->
+3. **3 ตระกูล** -- Simple, Parallel, Ritual -- เลือกให้เหมาะกับงาน <!-- .element: class="fragment" -->
+4. **Bun Shell** -- เพิ่ม code เมื่อต้องการ data จริงจาก system <!-- .element: class="fragment" -->
+5. **ทุกคนสร้าง Skill ได้** -- เริ่มจาก Simple แล้วค่อยขยาย <!-- .element: class="fragment" -->
 
 ---
 
