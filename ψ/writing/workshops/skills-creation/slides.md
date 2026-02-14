@@ -1,91 +1,10 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skills Creation Workshop — Fortal 2026</title>
-
-    <!-- Reveal.js 5.x -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reset.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" id="theme">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css">
-
-    <!-- Thai Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --r-main-font: 'Sarabun', sans-serif;
-            --r-heading-font: 'Sarabun', sans-serif;
-            --r-code-font: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
-            --r-heading-color: #00d9ff;
-            --r-background-color: #0d1117;
-            --r-main-color: #e6edf3;
-            --r-main-font-size: 38px;
-            --r-heading-text-transform: none;
-        }
-        .reveal h1 { font-size: 2.2em; color: #00d9ff; }
-        .reveal h2 { font-size: 1.6em; color: #00d9ff; }
-        .reveal h3 { font-size: 1.3em; color: #00ff9f; }
-        .reveal strong { color: #ffd700; }
-        .reveal code { color: #00d9ff; }
-        .reveal pre code { color: inherit; }
-        .reveal pre {
-            font-size: 0.55em;
-            width: 92%;
-        }
-        .reveal pre code {
-            max-height: 480px;
-            padding: 16px;
-            border-radius: 10px;
-            line-height: 1.4;
-            background: rgba(0, 0, 0, 0.5);
-        }
-        .reveal table {
-            font-size: 0.7em;
-            border-collapse: collapse;
-            margin: 0.5em auto;
-        }
-        .reveal table th {
-            background: rgba(0, 217, 255, 0.2);
-            font-weight: 700;
-        }
-        .reveal table th,
-        .reveal table td {
-            border: 1px solid #444;
-            padding: 10px 20px;
-            text-align: left;
-        }
-        .reveal blockquote {
-            background: rgba(0, 217, 255, 0.1);
-            border-left: 4px solid #00d9ff;
-            padding: 20px;
-            font-style: normal;
-            width: 85%;
-            font-size: 0.9em;
-        }
-        .reveal ul, .reveal ol {
-            display: block;
-            margin-left: 1em;
-        }
-        .reveal li {
-            margin-bottom: 0.3em;
-        }
-    </style>
-</head>
-<body>
-    <div class="reveal">
-        <div class="slides">
-            <section data-markdown data-separator="\n\n---\n\n" data-separator-notes="^Note:">
-                <textarea data-template>
 # Skills Creation Workshop / เวิร์กช็อปสร้าง Skill
 
 **Claude Code Skills — From Zero to Your Own Skill**
 
-วันที่: 17 กุมภาพันธ์ 2568 (2026)<br>
-สถานที่: Hakone Cafe, เชียงใหม่<br>
-ผู้สอน: Nat (Weerawan)<br>
+วันที่: 17 กุมภาพันธ์ 2568 (2026)
+สถานที่: Hakone Cafe, เชียงใหม่
+ผู้สอน: Nat (Weerawan)
 จัดโดย: Fortal AI Agent Learning
 
 > "Every skill begins as rough timber. The workshop shapes it into something that fits the hand."
@@ -96,7 +15,11 @@
 
 # วันนี้คุณจะสร้าง Skill ของตัวเอง
 
-ไม่ต้องเขียนโค้ดก่อนก็ได้ เริ่มจาก **Markdown** ธรรมดา
+Today you will **build your own Claude Code skill** from scratch.
+
+ไม่ต้องเขียนโค้ดก่อนก็ได้ เริ่มจาก Markdown ธรรมดา
+
+No code required to start -- just Markdown.
 
 ### สิ่งที่คุณจะได้จากวันนี้:
 - เข้าใจสถาปัตยกรรม Skill (Skill Architecture)
@@ -145,9 +68,9 @@ Claude Code อ่านไฟล์ SKILL.md แล้วทำตาม step-b
 | **Ritual** | Ritual Chamber (ห้องพิธี) | Multi-step guided | `/awaken`, `/rrr` | 15-20 min |
 
 ### เปรียบเทียบง่ายๆ:
-- **Simple** = สั่งกาแฟ 1 แก้ว ☕
-- **Parallel** = สั่ง 3 คนไปหาข้อมูลพร้อมกัน 🔍🔍🔍
-- **Ritual** = พิธีกรรม ต้องทำครบทุก step 📜
+- **Simple** = สั่งกาแฟ 1 แก้ว
+- **Parallel** = สั่ง 3 คนไปหาข้อมูลพร้อมกัน
+- **Ritual** = พิธีกรรม มีขั้นตอนชัดเจน ต้องทำครบทุก step
 
 ---
 
@@ -205,36 +128,37 @@ description: Log emotions, feelings, and mood.
 ---
 ```
 
-### `name` -- ชื่อ Skill (ต้อง unique)
-### `description` -- **trigger signal** ที่บอก AI ว่าจะเรียก skill เมื่อไหร่
+### `name` -- ชื่อ Skill
+- ใช้เป็น command: `/feel`, `/learn`, `/trace`
+- ต้อง unique, ห้ามซ้ำกับ skill อื่น
+
+### `description` -- คำอธิบาย (สำคัญมาก!)
+- Claude ใช้ description เพื่อ **ตัดสินว่าจะเรียก skill นี้เมื่อไหร่**
+- เป็น trigger signal ที่บอก AI ว่า "skill นี้เหมาะกับคำสั่งนี้"
 
 ---
 
 ## Description is the Trigger / Description คือตัวกระตุ้น
 
-### Bad:
+### Bad Description:
 ```yaml
 description: A skill for stuff.
 ```
 Claude ไม่รู้ว่าจะใช้ตอนไหน
 
-### Good:
+### Good Description:
 ```yaml
 description: Log emotions, feelings, and mood.
   Use when feeling tired, happy, frustrated,
   or any emotional state worth recording.
+  Tracks emotional patterns over time.
 ```
 Claude เข้าใจทันทีว่า: user พูดถึง feeling --> เรียก /feel
 
----
-
-## Description: หลักการเขียน
-
-- ใส่ **action words** -- Log, Search, Create, Track
-- ใส่ **use cases** -- when feeling..., when you need to...
+### หลักการ:
+- ใส่ **action words** (Log, Search, Create, Track)
+- ใส่ **use cases** (when feeling..., when you need to...)
 - ใส่ **keywords** ที่ user น่าจะพิมพ์
-
-> Description ดีๆ สำคัญกว่า code เก่งๆ
 
 ---
 
@@ -257,10 +181,6 @@ Claude เข้าใจทันทีว่า: user พูดถึง feeli
 แสดงข้อความยืนยันให้ user
 ```
 
----
-
-## Steps Pattern: สิ่งสำคัญ
-
 ### Pattern สำคัญ:
 - **Step 0** มักเป็น Timestamp (เพื่อ traceability)
 - **Step สุดท้าย** มักเป็น Output/Confirm
@@ -278,48 +198,40 @@ Extract the emotion keyword and optional context.
 ARGUMENTS: $ARGUMENTS
 ```
 
-`$ARGUMENTS` ถูกแทนที่ด้วยข้อความที่ user พิมพ์หลัง `/command`
-
----
-
-## ARGUMENTS: วิธีทำงาน
-
-### ตัวอย่าง:
+### วิธีทำงาน:
 1. User พิมพ์: `/feel tired after long meeting`
 2. Claude เห็น: `ARGUMENTS: tired after long meeting`
-3. Claude แยก emotion = "tired", context = "after long meeting"
+3. Claude ทำตาม Step 1: แยก emotion = "tired", context = "after long meeting"
 
 ### Tips:
-- ถ้า user ไม่ใส่ arguments --> `$ARGUMENTS` จะว่างเปล่า
+- `$ARGUMENTS` ถูกแทนที่ด้วยข้อความที่ user พิมพ์หลัง `/command`
+- ถ้า user ไม่ใส่ arguments, `$ARGUMENTS` จะว่างเปล่า
 - เขียน Step ให้ handle ทั้งกรณี **มี** และ **ไม่มี** arguments
 
 ---
 
 ## Local vs Global Install
 
-### Local (ใช้ใน project เดียว):
+### Local Install (ใช้ใน project เดียว):
 ```bash
 oracle-skills install -s feel -y
 ```
-ติดตั้งไปที่ `.claude/skills/` ใน project ปัจจุบัน
+- ติดตั้งไปที่ `.claude/skills/` ใน project ปัจจุบัน
+- เหมาะกับ skill เฉพาะ project
 
-### Global (ใช้ได้ทุก project):
+### Global Install (ใช้ได้ทุก project):
 ```bash
 oracle-skills install -s feel -g -y
 ```
-ติดตั้งไปที่ `~/.claude/skills/`
+- ติดตั้งไปที่ `~/.claude/skills/`
+- ใช้ได้ทุก project, ทุก directory
 
----
-
-## Local vs Global: เปรียบเทียบ
-
+### ความต่าง:
 | | Local | Global |
 |---|---|---|
 | ที่อยู่ | `.claude/skills/` | `~/.claude/skills/` |
 | scope | project เดียว | ทุก project |
 | เหมาะกับ | project-specific | utility skills |
-
-> **Rule of thumb**: ถ้าใช้ทุก project --> Global, ถ้าเฉพาะ project --> Local
 
 ---
 
@@ -334,7 +246,12 @@ BB AI          Codex CLI
 
 Skill เดียว --> ติดตั้งได้กับ **14 agents** ผ่าน CLI installer
 
-**oracle-skills CLI จัดการ folder structure ของแต่ละ agent ให้อัตโนมัติ**
+แต่ละ agent มี folder structure ต่างกัน:
+- Claude Code: `.claude/commands/`
+- Cursor: `.cursor/rules/`
+- Windsurf: `.windsurfrules`
+
+**oracle-skills CLI จัดการให้อัตโนมัติ**
 
 ---
 
@@ -501,10 +418,6 @@ ls .claude/commands/
 Timestamp: 2026-02-14T10:00:00+07:00
 ```
 
----
-
-## ทดสอบเพิ่มเติม + Troubleshooting
-
 ### ลองอีกที:
 ```
 /hello
@@ -594,8 +507,14 @@ ARGUMENTS: $ARGUMENTS
 
 # scripts/main.ts
 
-**SKILL.md** บอก Claude **ว่าจะทำอะไร**
-**scripts/main.ts** บอก Claude **ว่าจะเอา data มาจากไหน**
+บาง Skill ต้องการ **data จริง** จาก system:
+- git log / git diff
+- file system
+- API calls
+- JSON processing
+
+SKILL.md บอก Claude **ว่าจะทำอะไร**
+scripts/main.ts บอก Claude **ว่าจะเอา data มาจากไหน**
 
 ```
 skills/
@@ -621,12 +540,9 @@ import { $ } from "bun";
 const output = await $`git log --oneline`.text();
 ```
 
----
-
-## Bun Shell: ข้อดี
-
+### ข้อดีของ Bun Shell:
 - **Cleaner syntax** -- template literal, อ่านง่าย
-- **Auto-escape** -- ปลอดภัยจาก injection
+- **Auto-escape** -- ตัวแปรถูก escape อัตโนมัติ ปลอดภัยจาก injection
 - **Type-safe** -- TypeScript built-in
 - **Fast** -- Bun เร็วกว่า Node.js 3-5x
 - **Built-in** -- ไม่ต้อง import child_process
@@ -667,7 +583,14 @@ console.log(pkg.name);
 | `.exitCode` | `number` | ตรวจสอบว่าสำเร็จหรือไม่ (0 = OK) |
 | `.lines()` | `string[]` | ต้องการแยกเป็นบรรทัด |
 
-> chain ได้: `await $`cmd`.quiet().text()`
+### Chaining:
+```typescript
+// quiet + text
+const out = await $`git diff --stat`.quiet().text();
+
+// quiet + json
+const data = await $`cat data.json`.quiet().json();
+```
 
 ---
 
@@ -683,10 +606,7 @@ const count = 5;
 const results = await $`git log --grep=${query} -${count}`.text();
 ```
 
----
-
-## Bun Shell: Safe by Default
-
+### Safe by default:
 ```typescript
 // ถ้า user ใส่ input อันตราย:
 const userInput = "; rm -rf /";
@@ -713,10 +633,6 @@ console.log(JSON.stringify({ commits: commits.split('\n') }));
 const status = await $`git status --short`.text();
 console.log(status);
 ```
-
----
-
-## Output Pattern: Markdown
 
 ### 3. Markdown Output (สำหรับ reports):
 ```typescript
@@ -814,15 +730,15 @@ console.log(diffs || "_No changes found_");
 **เวลา: 25 นาที**
 
 ### Option A: เพิ่ม script ให้ skill จาก Exercise 1
+- เช่น `/bookmark` + script ที่ fetch URL title
+
 ### Option B: สร้าง /git-search ตาม demo
+- Copy SKILL.md + main.ts แล้ว modify
+
 ### Option C: สร้าง skill ใหม่ที่ต้องใช้ data
 - `/repo-stats` -- แสดงสถิติ git repo
 - `/recent-changes` -- แสดง changes ล่าสุด
 - `/branch-info` -- แสดงข้อมูล branches
-
----
-
-## Exercise 2: Setup
 
 ### ต้องการ:
 ```bash
@@ -830,22 +746,25 @@ bun --version    # ตรวจว่ามี Bun
 bun init -y      # สร้าง project (ถ้ายังไม่มี)
 ```
 
-> Bun ติดตั้งด้วย `curl -fsSL https://bun.sh/install | bash`
-
 ---
 
 ## Part 4: The Parallel Pattern / รูปแบบ Parallel
 
-# 1 agent = มุมมองแคบ, 3 agents = ครอบคลุม
+# ทำไม 1 agent = มุมมองแคบ, 3 agents = ครอบคลุม
+
+### ตัวอย่าง: `/learn` ศึกษา codebase
 
 **1 agent**: อ่าน README แล้วสรุป (ผิวเผิน)
 
 **3 agents พร้อมกัน**:
-- Agent 1: สำรวจ architecture
-- Agent 2: อ่าน core logic
-- Agent 3: ศึกษา tests
+- Agent 1: สำรวจ architecture + folder structure
+- Agent 2: อ่าน core logic + key patterns
+- Agent 3: ศึกษา tests + edge cases
 
-> เหมือนส่ง 3 คนไปสำรวจเมืองใหม่ แต่ละคนเห็นคนละมุม -- รวมกันได้ภาพเต็ม
+**ผลลัพธ์**: ได้ภาพรวมที่ **ลึก** และ **หลากมุมมอง** กว่ามาก
+
+> เหมือนส่ง 3 คนไปสำรวจเมืองใหม่ แล้วกลับมาเล่าให้ฟัง
+> แต่ละคนเห็นคนละมุม -- รวมกันได้ภาพเต็ม
 
 ---
 
@@ -853,20 +772,31 @@ bun init -y      # สร้าง project (ถ้ายังไม่มี)
 
 ```
 User: /learn some-repo
-       ┌──────────────────┐
-       │  Orchestrator    │
-       │  (Opus - main)   │
-       └──────┬───────────┘
-              │ spawns 3 Haiku agents
-     ┌────────┼────────┐
-     v        v        v
- ┌────────┐┌────────┐┌────────┐
- │Agent 1 ││Agent 2 ││Agent 3 │
- │Structure││ Core   ││Tests & │
- │& Config ││ Logic  ││ Docs   │
- └───┬────┘└───┬────┘└───┬────┘
-     v         v         v
- doc_1.md  doc_2.md  doc_3.md
+
+         ┌─────────────────────┐
+         │   Orchestrator      │
+         │   (Opus - main)     │
+         └──────┬──────────────┘
+                │ spawns
+       ┌────────┼────────┐
+       v        v        v
+  ┌─────────┐┌─────────┐┌─────────┐
+  │ Agent 1 ││ Agent 2 ││ Agent 3 │
+  │ (Haiku) ││ (Haiku) ││ (Haiku) │
+  │         ││         ││         │
+  │Structure││  Core   ││ Tests & │
+  │& Config ││  Logic  ││  Docs   │
+  └────┬────┘└────┬────┘└────┬────┘
+       │          │          │
+       v          v          v
+  doc_1.md    doc_2.md   doc_3.md
+       │          │          │
+       └──────────┼──────────┘
+                  v
+         ┌─────────────────┐
+         │  Hub File (Index)│
+         │  links all docs  │
+         └─────────────────┘
 ```
 
 ---
@@ -879,13 +809,7 @@ User: /learn some-repo
 /learn --deep    -->  5 agents  ~10 min  (เจาะลึก)
 ```
 
-- **--fast**: แค่อยากรู้คร่าวๆ ว่า repo นี้เกี่ยวกับอะไร
-- **default**: อยากเข้าใจดีพอที่จะ contribute ได้
-- **--deep**: อยากเข้าใจทุกมุม ทุก pattern
-
----
-
-## Mode Escalation: Implementation
+### Implementation ใน SKILL.md:
 
 ```markdown
 ## Step 1: Determine Mode
@@ -897,17 +821,24 @@ Check ARGUMENTS for flags:
 Each subagent gets a different focus area.
 ```
 
-> เขียนใน SKILL.md แค่นี้ Claude จัดการเรื่อง spawning ให้
+### ทำไมต้อง escalate?
+- **--fast**: แค่อยากรู้คร่าวๆ ว่า repo นี้เกี่ยวกับอะไร
+- **default**: อยากเข้าใจดีพอที่จะ contribute ได้
+- **--deep**: อยากเข้าใจทุกมุม ทุก pattern ทุก edge case
 
 ---
 
 ## Haiku Economics / เศรษฐศาสตร์ Haiku
 
+### ราคา token (โดยประมาณ):
+
 | Model | Cost | เหมาะกับ |
 |-------|------|---------|
 | **Opus** | $$$$$ | Synthesis, final output |
 | **Sonnet** | $$$ | Complex reasoning |
-| **Haiku** | $ | Search, exploration |
+| **Haiku** | $ | Search, exploration, data gathering |
+
+### Parallel Skill ใช้ Haiku เป็น subagent:
 
 ```
 3 Haiku agents = ราคาเท่า 1 Opus call
@@ -916,14 +847,9 @@ Each subagent gets a different focus area.
 
 **ประหยัด ~85% เทียบกับใช้ Opus ทำทุกอย่าง**
 
----
-
-## Pattern: Haiku สำรวจ, Opus สังเคราะห์
-
-- **Haiku** อ่านไฟล์, ค้นหา, สรุปข้อมูล (ถูก + เร็ว)
-- **Opus** รวมผลลัพธ์ เขียน final report (แพง แต่ทำครั้งเดียว)
-
-> ใช้ทรัพยากรอย่างฉลาด -- ส่ง scout ไปสำรวจ แล้วให้ master สรุป
+### Pattern: **Haiku สำรวจ, Opus สังเคราะห์**
+- Haiku อ่านไฟล์, ค้นหา, สรุปข้อมูล (ถูก + เร็ว)
+- Opus รวมผลลัพธ์ เขียน final report (แพง แต่ทำครั้งเดียว)
 
 ---
 
@@ -946,14 +872,14 @@ Each subagent gets a different focus area.
 
 ## Critical Pattern: Path Discipline
 
-# ส่ง Absolute Path เสมอ!
+# ส่ง Absolute Path เสมอ -- อย่าใช้ Relative Path!
 
 ### Problem:
 ```markdown
 ## Step: Subagent Task
 Explore the repo and write to docs/
 ```
-Subagent: "docs/ อยู่ที่ไหน?"
+Subagent: "docs/ อยู่ที่ไหน? relative to อะไร?"
 
 ### Solution:
 ```markdown
@@ -963,6 +889,11 @@ DOCS_DIR: /Users/nat/Code/github.com/nazt/my-repo/ψ/learn
 
 Explore SOURCE_DIR and write results to DOCS_DIR.
 ```
+
+### ทำไมสำคัญ?
+- Subagent ทำงานใน process แยก -- ไม่รู้ cwd ของ parent
+- Relative path จะพังเมื่อ subagent เริ่มจาก directory อื่น
+- **Absolute path = ปลอดภัยเสมอ**
 
 ---
 
@@ -983,7 +914,19 @@ learn_report.md    <-- Agent 2 เขียนทับ!
 1423_testing.md         <-- Agent 3 (14:23)
 ```
 
-> สอดคล้องกับหลัก **Nothing is Deleted** -- ทุก run สร้างไฟล์ใหม่
+### Pattern ใน SKILL.md:
+```markdown
+## Step 0: Timestamp
+Record the current time.
+Use format HHMM for file prefix.
+
+## Step 2: Write Output
+Filename: {HHMM}_{topic}.md
+Example: 1423_architecture.md
+```
+
+> ทำให้ทุก run สร้างไฟล์ใหม่ ไม่เขียนทับ run ก่อนหน้า
+> สอดคล้องกับหลัก **Nothing is Deleted**
 
 ---
 
@@ -1124,26 +1067,23 @@ Key Questions:
 
 # สร้างสิ่งที่อยากโชว์ให้คนอื่นดู
 
+### Resources:
+- Slide deck นี้ -- เปิดดูกลับได้ตลอด
+- Exercise templates -- ใช้เป็น starting point
+- oracle-skills-cli repo -- ดูตัวอย่าง 26 skills
+- ผู้สอน -- ยกมือถามได้เลย
+
 ### Tips:
 - เริ่มจาก **Simple** แล้วค่อยเพิ่ม
 - ทดสอบ **ทุกครั้ง** ที่เปลี่ยนอะไร
 - `description` ดีๆ สำคัญกว่า code เก่งๆ
 - ถ้าติด -- ดู `/feel` หรือ `/hello` เป็นตัวอย่าง
 
-> ยกมือถามผู้สอนได้เลย
-
----
-
-## Build Checklist
-
+### Checklist:
 - [ ] SKILL.md มี frontmatter ครบ (name + description)
 - [ ] Steps ชัดเจน Claude ทำตามได้
 - [ ] ARGUMENTS: $ARGUMENTS อยู่ท้ายไฟล์
 - [ ] ทดสอบแล้ว work
-
-### Resources:
-- Slide deck นี้ -- เปิดดูกลับได้ตลอด
-- oracle-skills-cli repo -- ดูตัวอย่าง 26 skills
 
 ---
 
@@ -1166,13 +1106,28 @@ Key Questions:
 
 ---
 
-## เลือกตระกูลอย่างไร? / Decision Tree
+## Three Families: Decision Tree / เลือกตระกูลอย่างไร
 
-| ถ้าต้องการ... | เลือก | ตัวอย่าง |
-|---|---|---|
-| งานง่ายๆ ทำทีเดียวจบ | **Simple** | `/feel`, `/hello` |
-| หลายมุมมอง / หลาย data | **Parallel** | `/learn`, `/trace` |
-| Multi-step ต้องครบทุก step | **Ritual** | `/awaken`, `/rrr` |
+```
+ต้องการสร้าง Skill?
+│
+├── งานง่ายๆ ทำทีเดียวจบ?
+│   └── Simple (Quick Bench)
+│       เช่น /feel, /hello, /bookmark
+│       Pattern: 1 SKILL.md, no scripts needed
+│
+├── ต้องการหลายมุมมอง / หลาย data sources?
+│   └── Parallel (Assembly Floor)
+│       เช่น /learn, /trace, /security-audit
+│       Pattern: Orchestrator + N Haiku agents
+│       Key: mode escalation, path discipline
+│
+└── Multi-step flow ที่ต้องทำครบทุก step?
+    └── Ritual (Ritual Chamber)
+        เช่น /awaken, /rrr, /birth
+        Pattern: Guided steps, human checkpoints
+        Key: ทำข้าม step ไม่ได้, ต้องทำตามลำดับ
+```
 
 ### Quick Check:
 - **"แค่ทำ X"** --> Simple
@@ -1181,16 +1136,16 @@ Key Questions:
 
 ---
 
-## Resources
+## Resources & Thank You
 
+# ขอบคุณทุกคน!
+
+### Resources:
 - **oracle-skills-cli**: `github.com/Soul-Brews-Studio/oracle-skills-cli`
 - **Oracle v2 (MCP)**: `github.com/Soul-Brews-Studio/oracle-v2`
 - **Workshop Materials**: `github.com/nazt/hello-oracle`
 
----
-
-## Cheat Sheet
-
+### Cheat Sheet:
 ```
 # สร้าง Skill
 mkdir -p skills/my-skill && touch skills/my-skill/SKILL.md
@@ -1203,46 +1158,14 @@ oracle-skills install -s my-skill -g -y  # global
 /my-skill [arguments]
 ```
 
----
-
-## Key Takeaways / สิ่งที่ได้จากวันนี้
-
+### Key Takeaways:
 1. **Skill = Markdown** -- ไม่ต้องเขียน code ก็สร้างได้
 2. **Description สำคัญที่สุด** -- เป็น trigger ที่บอก AI ว่าจะใช้เมื่อไหร่
 3. **3 ตระกูล** -- Simple, Parallel, Ritual -- เลือกให้เหมาะกับงาน
 4. **Bun Shell** -- เพิ่ม code เมื่อต้องการ data จริงจาก system
 5. **ทุกคนสร้าง Skill ได้** -- เริ่มจาก Simple แล้วค่อยขยาย
 
----
-
-## ขอบคุณทุกคน! / Thank You!
-
 ### Instructor:
 Nat (Weerawan) -- github.com/nazt
 
-### Organized by:
-Fortal AI Agent Learning
-
 > "The workshop is open. The workbench is ready. Let's build."
-                </textarea>
-            </section>
-        </div>
-    </div>
-
-    <!-- Reveal.js Core -->
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/markdown/markdown.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js"></script>
-
-    <script>
-        Reveal.initialize({
-            hash: true,
-            slideNumber: 'c/t',
-            center: true,
-            transition: 'slide',
-            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
-        });
-    </script>
-</body>
-</html>
