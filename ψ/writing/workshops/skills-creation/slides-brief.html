@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Skills — Brief / Fortal 2026</title>
+
+    <!-- Reveal.js 5.x -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" id="theme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css">
+
+    <!-- Thai Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --r-main-font: 'Sarabun', sans-serif;
+            --r-heading-font: 'Sarabun', sans-serif;
+            --r-code-font: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+            --r-heading-color: #00d9ff;
+            --r-background-color: #0d1117;
+            --r-main-color: #e6edf3;
+            --r-main-font-size: 38px;
+            --r-heading-text-transform: none;
+        }
+        .reveal h1 { font-size: 2.2em; color: #00d9ff; }
+        .reveal h2 { font-size: 1.6em; color: #00d9ff; }
+        .reveal h3 { font-size: 1.3em; color: #00ff9f; }
+        .reveal strong { color: #ffd700; }
+        .reveal code { color: #00d9ff; }
+        .reveal pre code { color: inherit; }
+        .reveal pre {
+            font-size: 0.55em;
+            width: 92%;
+        }
+        .reveal pre code {
+            max-height: 480px;
+            padding: 16px;
+            border-radius: 10px;
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .reveal table {
+            font-size: 0.7em;
+            border-collapse: collapse;
+            margin: 0.5em auto;
+        }
+        .reveal table th {
+            background: rgba(0, 217, 255, 0.2);
+            font-weight: 700;
+        }
+        .reveal table th,
+        .reveal table td {
+            border: 1px solid #444;
+            padding: 10px 20px;
+            text-align: left;
+        }
+        .reveal blockquote {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            font-style: normal;
+            width: 85%;
+            font-size: 0.9em;
+        }
+        .reveal ul, .reveal ol {
+            display: block;
+            margin-left: 1em;
+        }
+        .reveal li {
+            margin-bottom: 0.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section data-markdown data-separator="\n\n---\n\n" data-separator-notes="^Note:">
+                <textarea data-template>
+# Claude Code Skills
+
+**สร้าง Skill จาก Markdown ธรรมดา**
+
+Nat (Weerawan) — Fortal AI Agent Learning
+
+---
+
+> "Every skill begins as rough timber. The workshop shapes it into something that fits the hand."
+
+---
+
+## What is a Skill?
+
+# SKILL.md = Markdown ที่ Claude อ่านเป็นคำสั่ง
+
+ไม่ใช่ plugin, ไม่ใช่ API, ไม่ใช่ extension
+
+**Markdown in, behavior out.**
+
+---
+
+## SKILL.md Anatomy
+
+```markdown
+---
+name: feel
+description: Log emotions and mood.
+  Use when feeling tired, happy, frustrated.
+---
+
+# /feel - Emotion Logger
+
+## Step 0: Timestamp
+## Step 1: Parse Emotion
+## Step 2: Log Entry
+## Step 3: Acknowledge
+
+ARGUMENTS: $ARGUMENTS
+```
+
+---
+
+## Live Demo
+
+```
+/feel tired
+```
+
+ทุกอย่างที่เกิดขึ้น มาจากไฟล์ Markdown ไฟล์เดียว
+
+---
+
+## Three Skill Families
+
+| Family | Pattern | Time |
+|--------|---------|------|
+| **Simple** | Direct execution | ~30 sec |
+| **Parallel** | 3-5 agents | 2-10 min |
+| **Ritual** | Multi-step guided | 15-20 min |
+
+---
+
+## Simple Skill
+
+สั่งกาแฟ 1 แก้ว ☕
+
+```
+/feel tired → log emotion → done
+```
+
+**เขียน SKILL.md → ติดตั้ง → ใช้งานได้เลย**
+
+---
+
+## Adding Code
+
+**SKILL.md** บอก Claude **ว่าจะทำอะไร**
+
+**scripts/main.ts** บอก Claude **ว่าจะเอา data มาจากไหน**
+
+```typescript
+import { $ } from "bun";
+const log = await $`git log --oneline -10`.text();
+console.log(log);
+```
+
+---
+
+## Parallel Skill
+
+ส่ง 3 คนไปสำรวจเมืองใหม่ 🔍🔍🔍
+
+แต่ละคนเห็นคนละมุม — **รวมกันได้ภาพเต็ม**
+
+---
+
+## /learn Architecture
+
+```
+       ┌──────────────────┐
+       │  Orchestrator    │
+       │  (Opus - main)   │
+       └──────┬───────────┘
+              │ spawns 3 Haiku agents
+     ┌────────┼────────┐
+     v        v        v
+ ┌────────┐┌────────┐┌────────┐
+ │Agent 1 ││Agent 2 ││Agent 3 │
+ │Structure││ Core   ││Tests & │
+ │& Config ││ Logic  ││ Docs   │
+ └────────┘└────────┘└────────┘
+```
+
+---
+
+## Haiku Economics
+
+3 Haiku agents = ราคาเท่า 1 Opus call
+
+**ประหยัด ~85%**
+
+ส่ง scout ไปสำรวจ แล้วให้ master สรุป
+
+---
+
+## Key Patterns
+
+- **Description = Trigger** — ใส่ action words + use cases <!-- .element: class="fragment" -->
+- **Path Discipline** — ส่ง absolute path ให้ subagent เสมอ <!-- .element: class="fragment" -->
+- **Time-Prefix** — `HHMM_filename.md` ป้องกันเขียนทับ <!-- .element: class="fragment" -->
+- **Mode Escalation** — `--fast` (1) → default (3) → `--deep` (5) <!-- .element: class="fragment" -->
+
+---
+
+## 14 Supported Agents
+
+```
+Claude Code    Cursor       Gemini CLI    Windsurf
+Cline          Copilot      Roo Code      Augment
+Amp            Kilo Code    Aider         Zed AI
+BB AI          Codex CLI
+```
+
+Skill เดียว → ติดตั้งได้กับ **14 agents**
+
+---
+
+## Cheat Sheet
+
+```bash
+# สร้าง
+mkdir -p skills/my-skill && touch skills/my-skill/SKILL.md
+
+# ติดตั้ง
+oracle-skills install -s my-skill -g -y
+
+# ทดสอบ
+/my-skill [arguments]
+```
+
+---
+
+## Takeaways
+
+1. **Skill = Markdown** — ไม่ต้องเขียน code ก็สร้างได้ <!-- .element: class="fragment" -->
+2. **Description สำคัญที่สุด** — เป็น trigger ที่บอก AI <!-- .element: class="fragment" -->
+3. **3 ตระกูล** — Simple, Parallel, Ritual <!-- .element: class="fragment" -->
+4. **ทุกคนสร้าง Skill ได้** — เริ่มจาก Simple <!-- .element: class="fragment" -->
+
+---
+
+# ขอบคุณ!
+
+**Nat (Weerawan)** — github.com/nazt
+
+Fortal AI Agent Learning
+
+> "The workshop is open. The workbench is ready. Let's build."
+                </textarea>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js Core -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: true,
+            transition: 'none',
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        });
+    </script>
+</body>
+</html>
