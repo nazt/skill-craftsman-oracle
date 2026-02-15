@@ -122,6 +122,13 @@ Show before/after with 1-2 alternatives:
 For Thai: prefer spoken-natural tone over textbook-formal.
 For English: prefer clear and direct over elaborate.
 
+**Always include an English version** — after the Thai/Mixed options, add:
+
+```markdown
+**English version:**
+> [natural English equivalent — not literal translation]
+```
+
 ### Step 5: Ask
 
 End with a choice — let the human decide:

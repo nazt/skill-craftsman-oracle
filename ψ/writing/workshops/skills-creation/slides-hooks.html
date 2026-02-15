@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hooks — สร้าง Automation ของคุณเอง / Fortal 2026</title>
+
+    <!-- Reveal.js 5.x -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/theme/black.css" id="theme">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/monokai.css">
+
+    <!-- Thai Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --r-main-font: 'Sarabun', sans-serif;
+            --r-heading-font: 'Sarabun', sans-serif;
+            --r-code-font: 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+            --r-heading-color: #00d9ff;
+            --r-background-color: #0d1117;
+            --r-main-color: #e6edf3;
+            --r-main-font-size: 38px;
+            --r-heading-text-transform: none;
+        }
+        .reveal h1 { font-size: 2.2em; color: #00d9ff; }
+        .reveal h2 { font-size: 1.6em; color: #00d9ff; margin-bottom: 1.5em; }
+        .reveal h3 { font-size: 1.3em; color: #00ff9f; }
+        .reveal strong { color: #ffd700; }
+        .reveal code { color: #00d9ff; }
+        .reveal pre code { color: inherit; }
+        .reveal pre {
+            font-size: 0.55em;
+            width: 92%;
+        }
+        .reveal pre code {
+            max-height: 480px;
+            padding: 16px;
+            border-radius: 10px;
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .reveal table {
+            font-size: 0.7em;
+            border-collapse: collapse;
+            margin: 0.5em auto;
+        }
+        .reveal table th {
+            background: rgba(0, 217, 255, 0.2);
+            font-weight: 700;
+        }
+        .reveal table th,
+        .reveal table td {
+            border: 1px solid #444;
+            padding: 10px 20px;
+            text-align: left;
+        }
+        .reveal blockquote {
+            background: rgba(0, 217, 255, 0.1);
+            border-left: 4px solid #00d9ff;
+            padding: 20px;
+            font-style: normal;
+            width: 85%;
+            font-size: 0.9em;
+        }
+        .reveal ul, .reveal ol {
+            display: block;
+            margin-left: 1em;
+        }
+        .reveal li {
+            margin-bottom: 0.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section data-markdown data-separator="\n\n---\n\n" data-separator-notes="^Note:">
+                <textarea data-template>
+# Hooks
+
+<span style="color:#ff6b6b;font-weight:700">สร้าง Automation ของคุณเอง</span>
+
+Nat (Weerawan) — Fortal AI Agent Learning
+
+---
+
+## Hooks คืออะไร?
+
+คำสั่งที่รันเองตามจังหวะ — ก่อน, หลัง, หรือระหว่างที่ Claude ทำงาน
+
+- <span style="color:#ff6b6b;font-weight:700">ก่อนใช้ tool</span> — <span class="fragment">ตรวจสอบก่อนรัน</span>
+- <span style="color:#ff6b6b;font-weight:700">หลังใช้ tool</span> — <span class="fragment">format, lint, log</span>
+- <span style="color:#ff6b6b;font-weight:700">เมื่อจบงาน</span> — <span class="fragment">validate, notify</span>
+
+<blockquote style="margin-top:1.5em">"Hooks turn Claude Code from a tool into a platform."</blockquote>
+
+---
+
+## สร้าง Hook แรก — 3 นาที
+
+เปิด `.claude/settings.json` แล้วเพิ่ม:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit|Write",
+      "hooks": [{
+        "type": "command",
+        "command": "prettier --write"
+      }]
+    }]
+  }
+}
+```
+
+Restart session — <span style="color:#ff6b6b;font-weight:700">เสร็จ!</span> แก้ไฟล์ → format อัตโนมัติ
+
+---
+
+## Hook Lifecycle — เข้าใจจังหวะ
+
+```
+User พิมพ์ ──→ [UserPromptSubmit]
+                    │
+              Claude คิด
+                    │
+              [PreToolUse] ──→ Tool รัน ──→ [PostToolUse]
+                    │
+              Claude ตอบ
+                    │
+                 [Stop]
+```
+
+กฎสำคัญ: <span style="color:#ff6b6b;font-weight:700">Pre = บล็อกได้</span>, Post = สังเกตเท่านั้น
+
+---
+
+## 3 Hook Types — เลือกให้เข้ากับงาน
+
+| Type | ทำอะไร | เมื่อไหร่ใช้ |
+|------|--------|-------------|
+| **command** | <span class="fragment">รัน shell script</span> | <span class="fragment">เร็ว, แน่นอน (format, lint)</span> |
+| **prompt** | <span class="fragment">ถาม LLM (Haiku)</span> | <span class="fragment">ต้องคิด ("ปลอดภัยไหม?")</span> |
+| **agent** | <span class="fragment">spawn subagent</span> | <span class="fragment">ซับซ้อน (ตรวจ test + อ่านไฟล์)</span> |
+
+Tip: เริ่มจาก `command` ก่อน — เร็วที่สุด, เข้าใจง่ายที่สุด
+
+---
+
+## Command Hook — Exit Codes
+
+Script ของคุณคุยกับ Claude ผ่าน exit code:
+
+| Exit | ความหมาย | Claude ทำอะไร |
+|------|----------|--------------|
+| `0` | สำเร็จ | ทำต่อ, อ่าน stdout |
+| `2` | <span style="color:#ff6b6b;font-weight:700">บล็อก!</span> | หยุดทันที, อ่าน stderr |
+| อื่นๆ | warning | ทำต่อ, log ไว้ |
+
+ตัวอย่าง: script เจอ `rm -rf` → `exit 2` → Claude หยุดทันที
+
+---
+
+## Prompt & Agent Hooks
+
+**Prompt** — ถาม LLM 1 รอบ:
+
+```json
+{
+  "type": "prompt",
+  "prompt": "Is this bash command safe? $ARGUMENTS"
+}
+```
+
+→ LLM ตอบ `{"ok": true/false, "reason": "..."}`
+
+**Agent** — subagent หลายรอบ:
+
+```json
+{
+  "type": "agent",
+  "prompt": "Verify all tests pass. $ARGUMENTS",
+  "timeout": 120
+}
+```
+
+→ อ่านไฟล์ + รัน tool ได้ | `prompt` = เร็ว + ฉลาด, `agent` = ช้า + ละเอียด
+
+---
+
+## Matcher Patterns — กรองให้ตรง
+
+| Pattern | ตรงกับ |
+|---------|--------|
+| `"Bash"` | Bash เท่านั้น |
+| `"Edit\|Write"` | Edit หรือ Write |
+| `"mcp__github__.*"` | GitHub MCP ทุก tool |
+| `".*"` หรือไม่ใส่ | ทุก tool |
+
+Matchers เป็น <span style="color:#ff6b6b;font-weight:700">regex — case-sensitive!</span>
+
+MCP pattern: `mcp__<server>__<tool>`
+
+---
+
+## Input & Variables — Hook รับอะไรมา?
+
+ทุก hook ได้ JSON ทาง stdin:
+
+```json
+{
+  "tool_name": "Bash",
+  "tool_input": { "command": "npm test" },
+  "cwd": "/project"
+}
+```
+
+Parse: `jq -r '.tool_input.command'`
+
+| Variable | ค่า |
+|----------|-----|
+| `$CLAUDE_PROJECT_DIR` | project root |
+| `$CLAUDE_ENV_FILE` | persist env (SessionStart) |
+
+Tip: ใช้ `${CLAUDE_PROJECT_DIR}` แทน hardcode path เสมอ
+
+---
+
+## Blocking — allow / deny / ask
+
+`PreToolUse` เท่านั้นที่เลือกได้:
+
+| Decision | ผลลัพธ์ |
+|----------|---------|
+| `allow` | ข้าม permission, ทำเลย |
+| `deny` | <span style="color:#ff6b6b;font-weight:700">หยุด</span>, บอก Claude ว่าทำไม |
+| `ask` | แสดง permission dialog ปกติ |
+
+```bash
+# ตัวอย่างใน script:
+if [[ "$cmd" =~ ^(ls|pwd|echo)$ ]]; then  # → allow
+if [[ "$cmd" =~ rm.*-rf ]]; then           # → deny (exit 2)
+```
+
+---
+
+## Configuration — อยู่ที่ไหน?
+
+| Scope | Path | แชร์ได้? |
+|-------|------|----------|
+| **User** | `~/.claude/settings.json` | ตัวเอง |
+| **Project** | `.claude/settings.json` | commit ได้ |
+| **Local** | `.claude/settings.local.json` | gitignored |
+
+Precedence: Local > Project > User
+
+<span style="color:#ff6b6b;font-weight:700">สำคัญ: Hook โหลดตอนเริ่ม session — แก้แล้วต้อง restart!</span>
+
+---
+
+## Workshop — สร้าง Hook ป้องกันไฟล์
+
+เป้าหมาย: ป้องกันไม่ให้ Claude แก้ `.env`
+
+```bash
+#!/bin/bash
+# .claude/hooks/protect-files.sh
+input=$(cat)
+file=$(echo "$input" | jq -r '.tool_input.file_path')
+
+if [[ "$file" == *.env* ]]; then
+  echo "Protected file: $file" >&2
+  exit 2  # BLOCK!
+fi
+exit 0
+```
+
+```json
+{ "PreToolUse": [{ "matcher": "Edit|Write",
+  "hooks": [{ "type": "command",
+    "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/protect-files.sh"
+}]}]}
+```
+
+---
+
+## Workshop — Quality Gate ก่อนหยุด
+
+เป้าหมาย: Claude ต้องรัน test ก่อนหยุดงาน
+
+```json
+{
+  "hooks": {
+    "Stop": [{
+      "hooks": [{
+        "type": "agent",
+        "prompt": "Run npm test. If any tests fail, do NOT stop — keep working until they pass.",
+        "timeout": 120
+      }]
+    }]
+  }
+}
+```
+
+Agent จะ: อ่านไฟล์ → รัน test → ถ้า fail → <span style="color:#ff6b6b;font-weight:700">บอก Claude ทำต่อ</span>
+
+---
+
+## Tips & Tricks
+
+1. <span style="color:#ff6b6b;font-weight:700">Parallel</span> — hooks ใน matcher เดียวกันรันพร้อมกัน
+2. <span style="color:#ff6b6b;font-weight:700">Async</span> — `{ "async": true }` ไม่บล็อก Claude
+3. <span style="color:#ff6b6b;font-weight:700">Multi-stage</span> — command (fast) + prompt (deep) ใน hook เดียว
+4. <span style="color:#ff6b6b;font-weight:700">Flag files</span> — สร้าง `.enable-strict` → hook เช็คก่อนรัน
+5. <span style="color:#ff6b6b;font-weight:700">Dedup</span> — hook เหมือนกันจากหลาย scope รันแค่ครั้งเดียว
+
+อย่าลืม: `jq` ต้องติดตั้ง · script ต้อง `chmod +x` · shell profile มี `echo`? wrap ด้วย `if [[ $- == *i* ]]`
+
+---
+
+## Debugging
+
+```bash
+# ดู hooks ที่ active
+/hooks
+
+# Full debug output
+claude --debug
+
+# Toggle verbose
+Ctrl+O
+```
+
+ทดสอบ script เอง:
+
+```bash
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"}}' | \
+  bash .claude/hooks/protect-files.sh
+echo "Exit: $?"
+```
+
+Hook ไม่ทำงาน? → matcher <span style="color:#ff6b6b;font-weight:700">case-sensitive</span> · JSON error? → shell profile `echo` · Stop loop? → เช็ค `stop_hook_active`
+
+---
+
+## Takeaways
+
+1. <span style="color:#ff6b6b;font-weight:700">เริ่มง่าย</span> — <span class="fragment">PostToolUse + prettier</span>
+2. <span style="color:#ff6b6b;font-weight:700">3 types</span> — <span class="fragment">command (fast), prompt (smart), agent (thorough)</span>
+3. <span style="color:#ff6b6b;font-weight:700">Pre = บล็อกได้</span> — <span class="fragment">Post = สังเกตเท่านั้น</span>
+4. <span style="color:#ff6b6b;font-weight:700">สร้างเอง</span> — <span class="fragment">script → ทดสอบ → settings.json</span>
+5. <span style="color:#ff6b6b;font-weight:700">แก้ hooks</span> — <span class="fragment">ต้อง restart session!</span>
+
+---
+
+# ขอบคุณ!
+
+**Nat (Weerawan)** — github.com/nazt
+
+Fortal AI Agent Learning
+
+> "Hooks turn Claude Code from a tool into a platform."
+                </textarea>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js Core -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.2.1/plugin/notes/notes.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            center: true,
+            transition: 'none',
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        });
+    </script>
+</body>
+</html>
